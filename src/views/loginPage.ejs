@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - ChronosFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <div class="login-wrapper">
+
+        <div class="login-card">
+
+            <div class="brand-header">
+                <h2 class="brand-title">ChronosFlow</h2>
+                <p class="brand-slogan">Master your time, elevate your productivity</p>
+            </div>
+
+            <form action="/login" method="POST">
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" name="email" placeholder="name@domain.com" required>
+                </div>
+
+                <div class="form-group">
+                    <div class="label-flex">
+                        <label class="form-label">Password</label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <input type="password" class="form-input" name="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Keep me signed in</label>
+                </div>
+
+                <button type="submit" class="btn-submit">Sign In</button>
+
+                <div class="form-footer">
+                    <span>Don't have an account? </span>
+                    <a href="/register" class="signup-link">Sign up free</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
