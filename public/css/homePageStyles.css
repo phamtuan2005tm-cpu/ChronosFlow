@@ -45,7 +45,7 @@
             cursor: pointer;
         }
 
-        .nav-item a {
+        .nav-item a{
             display: block;
             color: #a5b4fc;
             text-decoration: none;
@@ -54,7 +54,9 @@
             font-weight: 500;
             transition: all 0.2s ease;
         }
-
+        .fa-solid {
+            padding-right: 10px;
+        }
         /* Khi li có class active hoặc khi hover thì đổi màu */
         .nav-item.active a,
         .nav-item a:hover {

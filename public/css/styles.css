@@ -7,7 +7,11 @@
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f4f7fc;
+    /* background-color: #f4f7fc; */
+    background-image: url("/images/background-2.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
     color: #333333;
 }
 
