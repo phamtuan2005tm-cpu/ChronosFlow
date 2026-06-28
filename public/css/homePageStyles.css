@@ -1,0 +1,525 @@
+* {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7fc;
+            color: #333333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #0F2854;
+            color: #ffffff;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 40px;
+            padding-left: 10px;
+        }
+
+        .brand-logo img {
+            width: 100px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+        }
+
+        .nav-item a {
+            display: block;
+            color: #a5b4fc;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        /* Khi li có class active hoặc khi hover thì đổi màu */
+        .nav-item.active a,
+        .nav-item a:hover {
+            background-color: #1C4D8D;
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            color: #fda4af;
+            text-decoration: none;
+            padding: 12px 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(224, 36, 36, 0.1);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-title {
+            color: #0F2854;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(15, 40, 84, 0.03);
+            border: 1px solid #eef2f6;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0F2854;
+        }
+
+        .dashboard-body {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(15, 40, 84, 0.04);
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .placeholder-icon {
+            font-size: 48px;
+            color: #4988C4;
+        }
+
+        .body-title {
+            color: #0F2854;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .body-text {
+            color: #6c757d;
+            max-width: 400px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ⚙️ CƠ CHẾ ẨN HIỆN TAB NỘI DUNG */
+        .tab-content {
+            display: none;
+            /* Mặc định ẩn toàn bộ */
+            flex-direction: column;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .tab-content.active {
+            display: flex;
+            /* Chỉ hiện phân khu nào có class active */
+        }
+
+        /* =========================================================================
+           🛠️ CSS UPGRADE FOR PARTIALS (TASKS, SCHEDULES, LEARNING)
+           ========================================================================= */
+        /* CSS dùng chung cho Inline Forms */
+        .task-form-card,
+        .schedule-form-card,
+        .stopwatch-card,
+        .logs-history-card {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(15, 40, 84, 0.03);
+            border: 1px solid #eef2f6;
+        }
+
+        .task-inline-form,
+        .schedule-inline-form {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .flex-3 {
+            flex: 3;
+            min-width: 200px;
+        }
+
+        .flex-2 {
+            flex: 2;
+            min-width: 180px;
+        }
+
+        .flex-1 {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            background-color: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1C4D8D;
+        }
+
+        .btn-add-task,
+        .btn-add-schedule {
+            background-color: #1C4D8D;
+            color: #ffffff;
+            border: none;
+            padding: 11px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            height: 41px;
+        }
+
+        .btn-add-task:hover,
+        .btn-add-schedule:hover {
+            background-color: #0F2854;
+        }
+
+        /* --- CSS KANBAN BOARD --- */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .kanban-column {
+            background-color: #edf2f7;
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+
+        .status-todo {
+            color: #4a5568;
+            border-color: #cbd5e1;
+        }
+
+        .status-progress {
+            color: #1C4D8D;
+            border-color: #4988C4;
+        }
+
+        .status-done {
+            color: #10b981;
+            border-color: #10b981;
+        }
+
+        .task-count {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .border-low {
+            border-left-color: #cbd5e1;
+        }
+
+        .border-medium {
+            border-left-color: #4988C4;
+        }
+
+        .border-high {
+            border-left-color: #ef4444;
+        }
+
+        .task-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0F2854;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: #6c757d;
+        }
+
+        .badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .priority-low {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .priority-medium {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px dashed #e2e8f0;
+            padding-top: 10px;
+        }
+
+        .btn-action {
+            border: none;
+            background: transparent;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .btn-next {
+            color: #1C4D8D;
+            background: #e0f2fe;
+        }
+
+        /* --- CSS WEEKLY TIMETABLE --- */
+        .timetable-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #eef2f6;
+            overflow-x: auto;
+        }
+
+        .timetable-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .timetable-table th,
+        .timetable-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        .timetable-table th {
+            background-color: #0F2854;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .time-col {
+            font-weight: 600;
+            color: #4a5568;
+            background-color: #f8fafc;
+            width: 130px;
+        }
+
+        .slot-box {
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .color-blue {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border-left: 4px solid #4988C4;
+        }
+
+        .color-navy {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            border-left: 4px solid #0F2854;
+        }
+
+        .color-cyan {
+            background-color: #ecfeff;
+            color: #0891b2;
+            border-left: 4px solid #BDE8F5;
+        }
+
+        /* --- CSS STOPWATCH & LOGS --- */
+        .stopwatch-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .stopwatch-display {
+            font-size: 42px;
+            font-weight: 700;
+            color: #0F2854;
+            margin: 15px 0;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .stopwatch-controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn-stopwatch {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-stopwatch.start {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-stopwatch.reset {
+            background-color: #64748b;
+            color: white;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .history-table th {
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .doc-link {
+            color: #1C4D8D;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .doc-link:hover {
+            text-decoration: underline;
+        }

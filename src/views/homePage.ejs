@@ -4,180 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - ChronosFlow</title>
+    <title>ChronosFlow</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* RESET TIÊU CHUẨN */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f7fc;
-            color: #333333;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* 📊 BỘ KHUNG LAYOUT: SIDEBAR + MAIN CONTENT */
-        /* Thanh Sidebar bên trái */
-        .sidebar {
-            width: 260px;
-            background-color: #0F2854;
-            /* Deep Navy chủ đạo */
-            color: #ffffff;
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .brand-logo {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 40px;
-            padding-left: 10px;
-        }
-
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .nav-item a {
-            display: block;
-            color: #a5b4fc;
-            text-decoration: none;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item.active a,
-        .nav-item a:hover {
-            background-color: #1C4D8D;
-            /* Corporate Blue */
-            color: #ffffff;
-        }
-
-        .btn-logout {
-            color: #fda4af;
-            text-decoration: none;
-            padding: 12px 15px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .btn-logout:hover {
-            background-color: rgba(224, 36, 36, 0.1);
-        }
-
-        /* Vùng nội dung chính bên phải */
-        .main-content {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .welcome-title {
-            color: #0F2854;
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        /* 📦 KHỐI THỐNG KÊ (GRID SYSTEM THUỒN) */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-card {
-            background-color: #ffffff;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(15, 40, 84, 0.03);
-            border: 1px solid #eef2f6;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #6c757d;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #0F2854;
-        }
-
-        /* KHỐI NỘI DUNG LỚN */
-        .dashboard-body {
-            background-color: #ffffff;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(15, 40, 84, 0.04);
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .placeholder-icon {
-            font-size: 48px;
-            color: #4988C4;
-        }
-
-        .body-title {
-            color: #0F2854;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .body-text {
-            color: #6c757d;
-            max-width: 400px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/homePageStyles.css">
 </head>
 
 <body>
 
     <aside class="sidebar">
         <div>
-            <div class="brand-logo">ChronosFlow</div>
+            <div class="brand-logo">
+                <img src="/images/Dark-Logo.png" alt="ChronosFlow Logo">
+            </div>
             <ul class="nav-menu">
-                <li class="nav-item active"><a href="#">Dashboard</a></li>
-                <li class="nav-item"><a href="#">Projects</a></li>
-                <li class="nav-item"><a href="#">Tasks</a></li>
-                <li class="nav-item"><a href="#">Analytics</a></li>
-                <li class="nav-item"><a href="#">Settings</a></li>
+                <li class="nav-item active" data-tab="dashboard"><a href="#">Dashboard</a></li>
+                <li class="nav-item" data-tab="schedules"><a href="#">Schedules</a></li>
+                <li class="nav-item" data-tab="tasks"><a href="#">Tasks</a></li>
+                <li class="nav-item" data-tab="learning"><a href="#">Learning</a></li>
+                <li class="nav-item" data-tab="settings"><a href="#">Settings</a></li>
             </ul>
         </div>
 
@@ -188,42 +34,85 @@
 
     <main class="main-content">
 
-        <div class="header-content">
-            <div>
-                <h1 class="welcome-title">Welcome Back!</h1>
-                <p style="color: #6c757d; font-size: 14px; margin-top: 4px;">Here's what's happening with your projects
-                    today.</p>
-            </div>
+        <div id="dashboard" class="tab-content active">
+            <%- include('partials/dashboardSection') %>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total Projects</div>
-                <div class="stat-value">12</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Active Tasks</div>
-                <div class="stat-value">34</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Hours Tracked</div>
-                <div class="stat-value">128.5h</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Productivity</div>
-                <div class="stat-value" style="color: #10b981;">+14.2%</div>
-            </div>
+        <div id="schedules" class="tab-content">
+            <%- include('partials/scheduleSection') %>
         </div>
 
-        <div class="dashboard-body">
-            <div class="placeholder-icon">⏰</div>
-            <h3 class="body-title">No recent activity found</h3>
-            <p class="body-text">You are all caught up! Create a new project or task from the sidebar menu to start
-                tracking your time efficiently.</p>
+        <div id="tasks" class="tab-content">
+            <%- include('partials/tasksSection') %>
+        </div>
+
+        <div id="learning" class="tab-content">
+            <%- include('partials/learningSection') %>
+        </div>
+
+        <div id="settings" class="tab-content">
+            <div class="header-content">
+                <h1 class="welcome-title">Settings</h1>
+            </div>
+            <div class="dashboard-body">
+                <div class="placeholder-icon">⚙️</div>
+                <h3 class="body-title">Settings Feature Coming Soon</h3>
+            </div>
         </div>
 
     </main>
 
+    <script>
+        // Hàm gọi ngầm API bốc dữ liệu thống kê từ Backend về cập nhật lên UI
+        function fetchDashboardStats() {
+            fetch('/api/dashboard-stats')
+                .then(response => response.json())
+                .then(data => {
+                    const totalProjEl = document.getElementById('stat-total-projects');
+                    const activeTaskEl = document.getElementById('stat-active-tasks');
+                    if (totalProjEl) totalProjEl.innerText = data.totalProjects;
+                    if (activeTaskEl) activeTaskEl.innerText = data.activeTasks;
+                })
+                .catch(err => console.error('Lỗi fetch số liệu cơ học:', err));
+        }
+
+        // Kích hoạt chạy lần đầu tiên ngay khi vừa nạp trang chủ
+        document.addEventListener("DOMContentLoaded", fetchDashboardStats);
+
+        // Bắt sự kiện chuyển đổi tab menu Sidebar bằng cơ chế an toàn
+        document.querySelectorAll('.nav-menu .nav-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // 1. Gỡ active cũ an toàn (nếu có) và nện active vào nút vừa click
+                const currentActiveNav = document.querySelector('.nav-menu .nav-item.active');
+                if (currentActiveNav) {
+                    currentActiveNav.classList.remove('active');
+                }
+                item.classList.add('active');
+
+                // 2. Lấy tên nhãn định vị tab
+                const targetTabId = item.getAttribute('data-tab');
+
+                // 3. Tìm thằng tab-content nào đang hiện hình để ẩn đi
+                const currentActiveTab = document.querySelector('.tab-content.active');
+                if (currentActiveTab) {
+                    currentActiveTab.classList.remove('active');
+                }
+
+                // 4. Bật sáng phân khu nội dung tương ứng
+                const targetTab = document.getElementById(targetTabId);
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                }
+
+                // Nếu người dùng lượn quay lại tab dashboard, tự động quét fetch số liệu mới
+                if (targetTabId === 'dashboard') {
+                    fetchDashboardStats();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

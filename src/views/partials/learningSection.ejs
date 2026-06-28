@@ -1,0 +1,60 @@
+<div class="header-content">
+    <div>
+        <h1 class="welcome-title">Learning Logs & Stopwatch</h1>
+        <p style="color: #6c757d; font-size: 14px; margin-top: 4px;">Track your real-time study sessions and manage
+            dynamic documents.</p>
+    </div>
+</div>
+
+<div class="learning-grid" style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-top: 20px;">
+
+    <section class="stopwatch-card">
+        <h3 class="section-title">Session Stopwatch</h3>
+        <div class="stopwatch-display">00:00:00</div>
+        <div class="stopwatch-controls">
+            <button class="btn-stopwatch start">Start</button>
+            <button class="btn-stopwatch reset">Reset</button>
+        </div>
+
+        <form action="/learning-logs" method="POST"
+            style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <div class="form-group">
+                <label>Subject Name</label>
+                <input type="text" name="subjectName" placeholder="What are you studying?" required>
+            </div>
+            <div class="form-group">
+                <label>Document URL (Drive/Notion)</label>
+                <input type="url" name="documentUrl" placeholder="https://notion.so/...">
+            </div>
+            <button type="submit" class="btn-add-task" style="width: 100%;">💾 Save Session Log</button>
+        </form>
+    </section>
+
+    <section class="logs-history-card">
+        <h3 class="section-title">Recent Study History</h3>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Duration</th>
+                    <th>Reference Document</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>28 Jun 2026</td>
+                    <td><strong>Node.js Basic</strong></td>
+                    <td><span class="badge priority-medium">45 mins</span></td>
+                    <td><a href="#" target="_blank" class="doc-link">🔗 View Notion</a></td>
+                </tr>
+                <tr>
+                    <td>27 Jun 2026</td>
+                    <td><strong>IELTS Reading</strong></td>
+                    <td><span class="badge priority-high">120 mins</span></td>
+                    <td><a href="#" target="_blank" class="doc-link">🔗 Google Drive</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
