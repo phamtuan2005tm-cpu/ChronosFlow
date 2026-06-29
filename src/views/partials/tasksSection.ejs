@@ -8,14 +8,14 @@
 
 <section class="task-form-card" style="margin-top: 20px; margin-bottom: 20px;">
     <h3 class="section-title">Create New Task</h3>
-    <form action="/tasks" method="POST" class="task-inline-form">
+    <form id="kanban-task-form" class="task-inline-form">
         <div class="form-group flex-3">
             <label>Task Title</label>
-            <input type="text" name="title" placeholder="What needs to be done?" required>
+            <input type="text" name="title" id="task-title" placeholder="What needs to be done?" required>
         </div>
         <div class="form-group flex-1">
             <label>Priority</label>
-            <select name="priority">
+            <select id="task-priority" name="priority">
                 <option value="Low">Low</option>
                 <option value="Medium" selected>Medium</option>
                 <option value="High">High</option>
@@ -23,45 +23,36 @@
         </div>
         <div class="form-group flex-1">
             <label>Due Date</label>
-            <input type="datetime-local" name="dueDate" required>
+            <input type="datetime-local" id="task-duedate" required name="dueDate">
         </div>
         <button type="submit" class="btn-add-task">➕ Add Task</button>
     </form>
 </section>
 
 <section class="kanban-board">
+
     <div class="kanban-column">
         <div class="column-header status-todo">
             <span>To-Do</span>
-            <span class="task-count">1</span>
+            <span class="task-count" id="count-todo">0</span>
         </div>
-        <div class="task-list">
-            <div class="task-item border-medium">
-                <h4 class="task-item-title">Learning Node.js Architecture</h4>
-                <div class="task-meta">
-                    <span class="badge priority-medium">Medium</span>
-                    <span class="task-date">⏰ 29 Jun, 10:00</span>
-                </div>
-                <div class="task-actions">
-                    <button class="btn-action btn-next">Start ➔</button>
-                </div>
-            </div>
-        </div>
+        <div class="task-list" id="list-todo"></div>
     </div>
 
     <div class="kanban-column">
         <div class="column-header status-progress">
             <span>In Progress</span>
-            <span class="task-count">0</span>
+            <span class="task-count" id="count-progress">0</span>
         </div>
-        <div class="task-list"></div>
+        <div class="task-list" id="list-progress"></div>
     </div>
 
     <div class="kanban-column">
         <div class="column-header status-done">
             <span>Done</span>
-            <span class="task-count">0</span>
+            <span class="task-count" id="count-done">0</span>
         </div>
-        <div class="task-list"></div>
+        <div class="task-list" id="list-done"></div>
     </div>
+
 </section>

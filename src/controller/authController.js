@@ -8,6 +8,9 @@ const getRegisterPage = (req, res) => {
     res.render('registerPage.ejs');
 }
 const getHomePage = (req, res) => {
+    if (!req.session || !req.session.user) {
+        return res.redirect('/login');
+    }
     res.render('homePage.ejs');
 }
 const handleLogin = async (req, res) => {
@@ -34,6 +37,10 @@ const handleLogin = async (req, res) => {
                 error: 'Incorrect Password!'
             })
         }
+        req.session.user = {
+            id: user.id,
+            email: user.user_email
+        };
         return res.redirect('/homePage');
     } catch (err) {
         console.error('❌ Lỗi handleLogin:', err);

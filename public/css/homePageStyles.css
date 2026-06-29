@@ -9,7 +9,7 @@
             background-color: #f4f7fc;
             color: #333333;
             display: flex;
-            min-height: 100vh;
+            height: 100vh;
         }
 
         .sidebar {
@@ -85,6 +85,7 @@
             padding: 40px;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
             gap: 30px;
         }
 
@@ -264,8 +265,15 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
+            height: calc(100vh - 290px);
         }
 
+        .task-list {
+    flex: 1;
+    overflow-y: auto;  /* Nhiều task tự động xuất hiện thanh cuộn riêng nội bộ */
+    padding-right: 5px;
+    max-height: 100%;
+}
         .kanban-column {
             background-color: #edf2f7;
             border-radius: 12px;
@@ -321,7 +329,6 @@
             border-left: 4px solid;
             display: flex;
             flex-direction: column;
-            gap: 12px;
         }
 
         .border-low {
@@ -340,14 +347,17 @@
             font-size: 14px;
             font-weight: 600;
             color: #0F2854;
+            padding-bottom: 12px;
         }
 
         .task-meta {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center ;
             font-size: 11px;
+            border-top: 1px dashed #e2e8f0;
             color: #6c757d;
+            padding-top: 10px;
         }
 
         .badge {
@@ -375,8 +385,6 @@
         .task-actions {
             display: flex;
             justify-content: flex-end;
-            border-top: 1px dashed #e2e8f0;
-            padding-top: 10px;
         }
 
         .btn-action {
