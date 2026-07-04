@@ -10,28 +10,171 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/css/homePageStyles.css">
+
+    <style>
+        /* Hiệu ứng chuyển động tịnh tiến êm ái cho cả 2 vùng */
+        .sidebar {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease !important;
+            overflow-x: hidden !important;
+        }
+
+        .main-content {
+            transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        /* 🔴 1. XỬ LÝ KHI SIDEBAR CO LẠI (COLLAPSED) */
+        .sidebar.collapsed {
+            width: 75px !important;
+            /* Độ rộng tối ưu cho chế độ icon */
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+
+        /* Ép vùng nội dung chính tràn sang lấp khoảng trống trắng */
+        .sidebar.collapsed~.main-content,
+        .sidebar.collapsed+.main-content,
+        body:has(.sidebar.collapsed) .main-content {
+            margin-left: 75px !important;
+            padding-left: 20px !important;
+        }
+
+        /* Ẩn chữ Menu, ẩn logo dài bằng ảnh của Tuấn */
+        .sidebar.collapsed .menu-text,
+        .sidebar.collapsed .brand-logo img,
+        .sidebar.collapsed .btn-logout span>span {
+            display: none !important;
+        }
+
+        /* Thay logo dài bằng icon đồng hồ cát nhỏ gọn nằm ngay tâm */
+        .sidebar.collapsed .brand-logo {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin: 0 0 10px 0 !important;
+            min-height: 40px !important;
+        }
+
+        .sidebar.collapsed .brand-logo::before {
+            content: "⏳";
+            font-size: 24px;
+            display: block;
+        }
+
+        /* Sắp xếp nút ba gạch nằm dọc ngay dưới icon đồng hồ cát */
+        .sidebar.collapsed .sidebar-header-area {
+            flex-direction: column-reverse !important;
+            gap: 12px !important;
+            justify-content: center !important;
+            width: 100% !important;
+        }
+
+        .sidebar.collapsed .sidebar-header-area button {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 5px 0 !important;
+            display: flex !important;
+        }
+
+        /* 🔴 2. BẢO VỆ ICON: ÉP CÁC ICON MENU VÀO TRUNG TÂM HÀNG DỌC (FIX LỖI MẤT ICON) */
+        .sidebar.collapsed .nav-menu {
+            padding: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+        }
+
+        .sidebar.collapsed .nav-menu .nav-item {
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        /* Khống chế thẻ 'a' thành một khối hộp vuông cân đối để giữ icon */
+        .sidebar.collapsed .nav-menu .nav-item a {
+            display: flex !important;
+            justify-content: center !important;
+            /* Đẩy icon vào giữa rốn */
+            align-items: center !important;
+            width: 50px !important;
+            height: 45px !important;
+            padding: 0 !important;
+            margin: 4px 0 !important;
+            border-radius: 8px !important;
+        }
+
+        /* Ép thẻ 'i' hiển thị độc lập, to rõ ràng */
+        .sidebar.collapsed .nav-menu .nav-item a i {
+            margin: 0 !important;
+            font-size: 20px !important;
+            /* Tăng kích thước lên nhìn cho nét */
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* 🔴 3. THU GỌN NÚT SIGN OUT DƯỚI ĐÁY */
+        .sidebar.collapsed .btn-logout {
+            padding: 12px 0 !important;
+            justify-content: center !important;
+            display: flex !important;
+            width: 100% !important;
+        }
+
+        .sidebar.collapsed .btn-logout span {
+            margin: 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+            width: 100% !important;
+        }
+
+        .sidebar.collapsed .btn-logout i {
+            margin: 0 !important;
+            font-size: 20px !important;
+            display: inline-block !important;
+        }
+    </style>
 </head>
 
 <body>
 
-    <aside class="sidebar">
+    <aside class="sidebar" id="main-sidebar">
         <div>
-            <div class="brand-logo">
-                <img src="/images/Dark-Logo.png" alt="ChronosFlow Logo">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; margin-bottom: 20px;"
+                class="sidebar-header-area">
+                <div class="brand-logo" style="margin: 0;">
+                    <img src="/images/Dark-Logo.png" alt="ChronosFlow Logo">
+                </div>
+
             </div>
+            <button class="nav-item" onclick="toggleSidebar()"
+                style="background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 18px; padding: 5px; display: flex; align-items: center;">
+                <a href="#"><i class="fa-solid fa-bars" id="sidebar-toggle-icon"></i><span class="menu-text"></span>
+                    Menu</span></a>
+            </button>
             <ul class="nav-menu">
-                <li class="nav-item active" data-tab="dashboard"><a href="#"><i
-                            class="fa-solid fa-house"></i>Dashboard</a></li>
-                <li class="nav-item" data-tab="schedules"><a href="#"><i class="fa-solid fa-calendar"></i>Schedules</a>
+
+                <li class="nav-item active" data-tab="dashboard">
+                    <a href="#"><i class="fa-solid fa-house"></i><span class="menu-text">Dashboard</span></a>
                 </li>
-                <li class="nav-item" data-tab="tasks"><a href="#"><i class="fa-solid fa-list-check"></i>Tasks</a></li>
-                <li class="nav-item" data-tab="learning"><a href="#"><i class="fa-solid fa-book"></i>Learning</a></li>
-                <li class="nav-item" data-tab="settings"><a href="#"><i class="fa-solid fa-gear"></i>Settings</a></li>
+                <li class="nav-item" data-tab="schedules">
+                    <a href="#"><i class="fa-solid fa-calendar"></i><span class="menu-text">Schedules</span></a>
+                </li>
+                <li class="nav-item" data-tab="tasks">
+                    <a href="#"><i class="fa-solid fa-list-check"></i><span class="menu-text">Tasks</span></a>
+                </li>
+                <li class="nav-item" data-tab="learning">
+                    <a href="#"><i class="fa-solid fa-book"></i><span class="menu-text">Learning</span></a>
+                </li>
+                <li class="nav-item" data-tab="settings">
+                    <a href="#"><i class="fa-solid fa-gear"></i><span class="menu-text">Settings</span></a>
+                </li>
             </ul>
         </div>
 
         <a href="/login" class="btn-logout">
-            <span><i class="fa-solid fa-arrow-right-from-bracket"></i>Sign Out</span>
+            <span><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign Out</span></span>
         </a>
     </aside>
 
@@ -66,6 +209,23 @@
     </main>
 
     <script>
+        // 💡 HÀM TOGGLE ĐÓNG/MỞ SIDEBAR THỜI GIAN THỰC (MỚI THÊM)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const toggleIcon = document.getElementById('sidebar-toggle-icon');
+            if (!sidebar) return;
+
+            // Bật/tắt class .collapsed ảo dựa trên hiệu ứng CSS
+            sidebar.classList.toggle('collapsed');
+
+            // Đổi icon Hamburger thành biểu tượng mũi tên chỉ hướng cho chuyên nghiệp
+            if (sidebar.classList.contains('collapsed')) {
+                toggleIcon.className = 'fa-solid fa-angles-right';
+            } else {
+                toggleIcon.className = 'fa-bars';
+            }
+        }
+
         // Hàm gọi ngầm API bốc dữ liệu thống kê từ Backend về cập nhật lên UI
         function fetchDashboardStats() {
             fetch('/api/dashboard-stats')
@@ -87,117 +247,111 @@
             item.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                // 1. Gỡ active cũ an toàn (nếu có) và nện active vào nút vừa click
                 const currentActiveNav = document.querySelector('.nav-menu .nav-item.active');
                 if (currentActiveNav) {
                     currentActiveNav.classList.remove('active');
                 }
                 item.classList.add('active');
 
-                // 2. Lấy tên nhãn định vị tab
                 const targetTabId = item.getAttribute('data-tab');
 
-                // 3. Tìm thằng tab-content nào đang hiện hình để ẩn đi
                 const currentActiveTab = document.querySelector('.tab-content.active');
                 if (currentActiveTab) {
                     currentActiveTab.classList.remove('active');
                 }
 
-                // 4. Bật sáng phân khu nội dung tương ứng
                 const targetTab = document.getElementById(targetTabId);
                 if (targetTab) {
                     targetTab.classList.add('active');
                 }
 
-                // Nếu người dùng lượn quay lại tab dashboard, tự động quét fetch số liệu mới
                 if (targetTabId === 'dashboard') {
                     fetchDashboardStats();
                 } else if (targetTabId === 'tasks') {
-                    loadAllTasks(); // 🔥 Cứ chuyển sang tab tasks là nạp dữ liệu thật lên lập tức!
+                    loadAllTasks();
                 }
             });
         });
+
         // 🔄 HÀM 1: FETCH DANH SÁCH TASK TỪ BACKEND VÀ ĐỔ VÀO CÁC CỘT KANBAN
+        // 🔥 HÀM LOAD VÀ PHÂN PHỐI TẤT CẢ TÁC VỤ LÊN KANBAN BOARD
         function loadAllTasks() {
-            console.log("📡 Đang bốc dữ liệu Task thô từ API...");
-
             fetch('/api/tasks')
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(tasks => {
-                    // 1. Dọn rỗng sạch bách rác cũ trong 3 hộc chứa cột trước khi bơm dữ liệu mới
-                    const todoList = document.getElementById('list-todo');
-                    const progressList = document.getElementById('list-progress');
-                    const doneList = document.getElementById('list-done');
+                    // 1. Dọn sạch ruột 3 cột trước khi bơm dữ liệu mới tránh bị lặp đè
+                    document.getElementById('list-todo').innerHTML = '';
+                    document.getElementById('list-progress').innerHTML = '';
+                    document.getElementById('list-done').innerHTML = '';
 
-                    if (todoList) todoList.innerHTML = '';
-                    if (progressList) progressList.innerHTML = '';
-                    if (doneList) doneList.innerHTML = '';
+                    // Khởi tạo lại bộ đếm số lượng task trên đỉnh cột
+                    let todoCount = 0;
+                    let progressCount = 0;
+                    let doneCount = 0;
 
-                    // Khởi tạo 3 biến đếm số lượng task cơ học
-                    let countTodo = 0, countProgress = 0, countDone = 0;
-
-                    // 2. Chạy vòng lặp quét qua từng cục Task JSON nhận được từ Backend
                     tasks.forEach(task => {
-                        // Định dạng lại ngày tháng hiển thị cho đẹp mắt (VD: 29 Jun, 15:00)
-                        const dateOption = { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' };
-                        const formattedDate = new Date(task.due_date).toLocaleDateString('en-US', dateOption);
+                        // Định dạng lại ngày hiển thị cho đẹp (nếu task có dueDate)
+                        const formattedDate = task.dueDate ? new Date(task.dueDate).toLocaleString('vi-VN', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            day: '2-digit',
+                            month: '2-digit'
+                        }) : 'Không có hạn';
 
-                        // Đúc chuỗi HTML Task Item theo đúng cái khuôn CSS cũ của Tuấn
-                        // Tìm đoạn đúc chuỗi taskHTML trong hàm loadAllTasks() và đổi thành đoạn này:
+                        // 2. 💡 ĐÚC CHUỖI HTML: Thêm draggable="true" và sự kiện ondragstart để kích nổ kéo thả
                         const taskHTML = `
-                            <div class="task-item border-${task.priority.toLowerCase()}">
-                            <h4 class="task-item-title">${task.title}</h4>
-                            <div class="task-meta">
-                                <span class="badge priority-${task.priority.toLowerCase()}">${task.priority}</span>
-                                <span class="task-date">⏰ ${formattedDate}</span>
-                            </div>
-        
-                            <div class="task-actions" style="margin-top: 12px; display: flex; justify-content: flex-end;">
-                                ${task.status === 'To-Do' ? `<button class="btn-action btn-next" style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="updateTaskStatus(${task.id}, 'In Progress')">Start ➔</button>` : ''}
-                                ${task.status === 'In Progress' ? `<button class="btn-action btn-next" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="updateTaskStatus(${task.id}, 'Done')">Finish ✓</button>` : ''}
-                                ${task.status === 'Done' ? `<button class="btn-action" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="deleteTask(${task.id})">🗑️ Xóa</button>` : ''}
-                            </div>
-                         </div>
-                        `;
+                    <div class="task-item border-${task.priority.toLowerCase()}" 
+                         draggable="true" 
+                         ondragstart="handleDragStart(event, ${task.id})">
+                        <h4 class="task-item-title">${task.title}</h4>
+                        <div class="task-meta">
+                            <span class="badge priority-${task.priority.toLowerCase()}">${task.priority}</span>
+                            <span class="task-date">⏰ ${formattedDate}</span>
+                        </div>
 
-                        // 3. Phân phối cơ học cái thẻ vừa đúc vào đúng hộc dựa theo 'status' dưới DB
+                        <div class="task-actions" style="margin-top: 12px; display: flex; justify-content: flex-end;">
+                            ${task.status === 'To-Do' ? `<button class="btn-action btn-next" style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;" onclick="updateTaskStatus(${task.id}, 'In Progress')">Start ➔</button>` : ''}
+                            ${task.status === 'In Progress' ? `<button class="btn-action btn-next" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;" onclick="updateTaskStatus(${task.id}, 'Done')">Finish ✓</button>` : ''}
+                            ${task.status === 'Done' ? `<button class="btn-action" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;" onclick="deleteTask(${task.id})">🗑️ Xóa</button>` : ''}
+                        </div>
+                    </div>
+                `;
+
+                        // 3. 💡 PHÂN PHỐI THẺ: Kiểm tra chính xác chữ hoa/thường khớp 100% với Database
                         if (task.status === 'To-Do') {
-                            todoList.innerHTML += taskHTML;
-                            countTodo++;
+                            document.getElementById('list-todo').insertAdjacentHTML('beforeend', taskHTML);
+                            todoCount++;
                         } else if (task.status === 'In Progress') {
-                            progressList.innerHTML += taskHTML;
-                            countProgress++;
-                        } else if (task.status === 'Done') {
-                            doneList.innerHTML += taskHTML;
-                            countDone++;
+                            document.getElementById('list-progress').insertAdjacentHTML('beforeend', taskHTML);
+                            progressCount++;
+                        } else if (task.status === 'Done') { // ➔ Đã sửa chữ D viết hoa chuẩn chỉnh
+                            document.getElementById('list-done').insertAdjacentHTML('beforeend', taskHTML);
+                            doneCount++;
                         }
                     });
 
-                    // 4. Đập số lượng đếm thực tế lên đầu mỗi cột mặt tiền
-                    if (document.getElementById('count-todo')) document.getElementById('count-todo').innerText = countTodo;
-                    if (document.getElementById('count-progress')) document.getElementById('count-progress').innerText = countProgress;
-                    if (document.getElementById('count-done')) document.getElementById('count-done').innerText = countDone;
+                    // 4. Cập nhật lại số lượng hiển thị trên badge đỉnh mỗi cột
+                    document.getElementById('count-todo').innerText = todoCount;
+                    document.getElementById('count-progress').innerText = progressCount;
+                    document.getElementById('count-done').innerText = doneCount;
                 })
-                .catch(err => console.error('Lỗi nạp danh sách Task mặt tiền:', err));
+                .catch(err => console.error('❌ Lỗi khi nạp danh sách Tasks:', err));
         }
 
         // ➕ HÀM 2: CHẶN SỰ KIỆN SUBMIT FORM VÀ BẮN API TẠO TASK MỚI
         document.addEventListener("DOMContentLoaded", () => {
-            // Kích hoạt nạp dữ liệu Task lần đầu nếu người dùng F5 ngay tại tab tasks
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('tab') === 'tasks') { loadAllTasks(); }
 
             const taskForm = document.getElementById('kanban-task-form');
             if (taskForm) {
                 taskForm.addEventListener('submit', function (e) {
-                    e.preventDefault(); // 🛑 CHẶN ĐỨNG HÀNH VI LOAD LẠI TRANG CỦA TRÌNH DUYỆT!
+                    e.preventDefault();
 
-                    // Bốc dữ liệu từ các ô Input dựa theo ID
                     const title = document.getElementById('task-title').value;
                     const priority = document.getElementById('task-priority').value;
                     const dueDate = document.getElementById('task-duedate').value;
 
-                    // Đóng gói thành cục dữ liệu JSON gửi lên Backend
                     fetch('/api/tasks', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -209,25 +363,16 @@
                         })
                         .then(newTask => {
                             console.log("➕ Tạo Task thành công ngầm:", newTask);
-
-                            // Gọi lại hàm loadAllTasks để tự động quét lại DB và vẽ thẻ mới lên giao diện
                             loadAllTasks();
-
-                            // Xóa sạch chữ trong các ô Input cho người dùng nhập lượt tiếp theo
                             taskForm.reset();
-
-                            // 🔥 QUAN TRỌNG: Bật cờ báo dữ liệu Dashboard đã bị đổi (Dirty)
-                            isDashboardDirty = true;
                         })
                         .catch(err => alert('Có lỗi cơ học khi thêm Task: ' + err.message));
                 });
             }
         });
+
         // ➔ HÀM 3: BẮN API CẬP NHẬT TRẠNG THÁI MỚI LÊN SERVER
         function updateTaskStatus(taskId, newStatus) {
-            console.log(`📡 Đang chuyển Task có ID ${taskId} sang trạng thái mới: ${newStatus}`);
-
-            // Bắn lệnh PUT ngầm kèm ID lên URL và trạng thái mới trong Body
             fetch(`/api/tasks/${taskId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -238,23 +383,15 @@
                     return response.json();
                 })
                 .then(result => {
-                    console.log("✓ Đổi trạng thái thành công dứới DB:", result);
-
-                    // 🔥 NÚT THẮT CHÍ MẠNG: Gọi lại động cơ quét lại DB và tự vẽ lại các thẻ sang cột mới!
                     loadAllTasks();
                 })
                 .catch(err => alert('Lỗi chuyển cột cơ học: ' + err.message));
         }
+
         // 🗑️ HÀM 4: BẮN API XÓA SỔ TASK VĨNH VIỄN
         function deleteTask(taskId) {
-            // Hiện hộp thoại cơ học xác nhận cho chắc ăn, tránh người dùng bấm nhầm
-            if (!confirm('Tuấn có chắc chắn muốn xóa vĩnh viễn Task này không?')) {
-                return; // Nếu bấm Cancel thì dừng lại, không làm gì cả
-            }
+            if (!confirm('Tuấn có chắc chắn muốn xóa vĩnh viễn Task này không?')) return;
 
-            console.log(`📡 Đang ra lệnh xóa vĩnh viễn Task có ID: ${taskId}`);
-
-            // Bắn lệnh DELETE ngầm lên Server kèm ID trên URL
             fetch(`/api/tasks/${taskId}`, {
                 method: 'DELETE'
             })
@@ -263,13 +400,62 @@
                     return response.json();
                 })
                 .then(result => {
-                    console.log("✓ Đã xóa sạch dưới Database:", result);
-
-                    // Gọi lại động cơ nạp dữ liệu để cập nhật lại màn hình và số đếm ngay lập tức
                     loadAllTasks();
                 })
                 .catch(err => alert('Lỗi xóa task cơ học: ' + err.message));
         }
+
+        // 🕒 LIVE DIGITAL CLOCK ENGINE WITH FULL ENGLISH TIMEFORMAT
+        function startLiveClock() {
+            const timeEl = document.getElementById('live-time');
+            const dateEl = document.getElementById('live-date');
+
+            if (!timeEl || !dateEl) return;
+
+            setInterval(() => {
+                const now = new Date();
+                timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: false });
+                const options = { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' };
+                dateEl.innerText = `⏳ ${now.toLocaleDateString('en-US', options)}`;
+            }, 1000);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            startLiveClock();
+        });
+        // 🔥 LOGIC KÉO THẢ KANBAN TRẬN ĐÁNH THỰC TẾ
+
+        // 1. Hàm khởi chạy khi bắt đầu nắm chuột kéo thẻ Task
+        function handleDragStart(e, taskId) {
+            // Ghi nhớ lại ID của task đang kéo vào bộ nhớ tạm của trình duyệt dưới dạng text
+            e.dataTransfer.setData("text/plain", taskId);
+            e.target.style.opacity = "0.5"; // Làm mờ nhẹ thẻ đang kéo nhìn cho thật
+        }
+
+        // 2. Hàm cho phép thả thẻ vào vùng chứa (Mặc định trình duyệt cấm thả nên phải chặn lại)
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        // 3. Hàm kích nổ khi người dùng buông chuột thả thẻ vào cột mới
+        function handleDrop(e, newStatus) {
+            e.preventDefault();
+
+            // Bốc lại ID của thẻ task từ bộ nhớ tạm ra
+            const taskId = e.dataTransfer.getData("text/plain");
+
+            if (taskId) {
+                // Gọi lại chính xác hàm updateTaskStatus sẵn có của Tuấn để bắn API PUT lên MySQL
+                updateTaskStatus(Number(taskId), newStatus);
+            }
+        }
+
+        // Thêm sự kiện bổ trợ: Khi kết thúc kéo (buông chuột dù trúng hay trượt) trả lại độ đậm cũ cho thẻ
+        document.addEventListener("dragend", (e) => {
+            if (e.target.classList.contains('task-item')) {
+                e.target.style.opacity = "1";
+            }
+        });
     </script>
 </body>
 

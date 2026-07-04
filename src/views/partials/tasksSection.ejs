@@ -36,7 +36,8 @@
             <span>To-Do</span>
             <span class="task-count" id="count-todo">0</span>
         </div>
-        <div class="task-list" id="list-todo"></div>
+        <div class="task-list" id="list-todo" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'To-Do')">
+        </div>
     </div>
 
     <div class="kanban-column">
@@ -44,7 +45,9 @@
             <span>In Progress</span>
             <span class="task-count" id="count-progress">0</span>
         </div>
-        <div class="task-list" id="list-progress"></div>
+        <div class="task-list" id="list-progress" ondragover="allowDrop(event)"
+            ondrop="handleDrop(event, 'In Progress')">
+        </div>
     </div>
 
     <div class="kanban-column">
@@ -52,7 +55,8 @@
             <span>Done</span>
             <span class="task-count" id="count-done">0</span>
         </div>
-        <div class="task-list" id="list-done"></div>
+        <div class="task-list" id="list-done" ondragover="allowDrop(event)" ondrop="handleDrop(event, 'Done')">
+        </div>
     </div>
 
 </section>

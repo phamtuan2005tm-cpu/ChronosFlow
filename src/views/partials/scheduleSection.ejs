@@ -1,86 +1,232 @@
-<div class="header-content">
-    <div>
-        <h1 class="welcome-title">Weekly Timetable</h1>
-        <p style="color: #6c757d; font-size: 14px; margin-top: 4px;">Set up your recurring fixed slots for the week.</p>
+<div class="calendar-dashboard-layout" style="display: flex; gap: 20px; align-items: flex-start;">
+
+    <div class="calendar-sidebar"
+        style="width: 260px; display: flex; flex-direction: column; gap: 20px; flex-shrink: 0;">
+
+        <div
+            style="background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+            <div id="live-date" style="font-size: 13px; color: #64748b; font-weight: 500; margin-bottom: 2px;">
+                Loading...</div>
+            <div id="live-time"
+                style="font-size: 24px; color: #1e293b; font-weight: 700; font-variant-numeric: tabular-nums;">00:00:00
+            </div>
+        </div>
+
+        <button id="btn-toggle-form" onclick="toggleScheduleForm()"
+            style="width: 100%; padding: 10px; border: none; background: #2563eb; color: white; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <i class="fa-solid fa-plus"></i> Add New Slot
+        </button>
+
+        <div id="schedule-form-card"
+            style="display: none; background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+            <form id="schedule-creation-form" style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 11px; font-weight: 600; color: #64748b;">Activity Name</label>
+                    <input type="text" id="sched-title" required
+                        style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 11px; font-weight: 600; color: #64748b;">Date / Start From</label>
+                    <input type="date" id="sched-date" required
+                        style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 11px; font-weight: 600; color: #64748b;">Start Time</label>
+                        <input type="time" id="sched-start-time" required
+                            style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                        <label style="font-size: 11px; font-weight: 600; color: #64748b;">End Time</label>
+                        <input type="time" id="sched-end-time" required
+                            style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 11px; font-weight: 600; color: #64748b;">Category</label>
+                    <select id="sched-category"
+                        style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                        <option value="learning">Learning</option>
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 11px; font-weight: 600; color: #64748b;">Frequency</label>
+                    <select id="sched-type" onchange="toggleRepeatUntil()"
+                        style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                        <option value="single">One-time Event</option>
+                        <option value="weekly">Weekly Recurring</option>
+                        <option value="monthly">Monthly Recurring</option>
+                    </select>
+                </div>
+
+                <!-- 💡 HÀNG NÚT CHỌN THỨ (TỰ ĐỘNG HIỆN KHI CHỌN WEEKLY RECURRING) -->
+                <div id="weekly-days-group" style="display: none; flex-direction: column; gap: 6px;">
+                    <label style="font-size: 11px; font-weight: 600; color: #64748b;">Repeat On (Select Days)</label>
+                    <div style="display: flex; gap: 4px; justify-content: space-between;">
+                        <button type="button" class="btn-day-checkbox" data-day="1"
+                            style="flex: 1; padding: 6px 0; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; color: #475569;">T2</button>
+                        <button type="button" class="btn-day-checkbox" data-day="2"
+                            style="flex: 1; padding: 6px 0; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; color: #475569;">T3</button>
+                        <button type="button" class="btn-day-checkbox" data-day="3"
+                            style="flex: 1; padding: 6px 0; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; color: #475569;">T4</button>
+                        <button type="button" class="btn-day-checkbox" data-day="4"
+                            style="flex: 1; padding: 6px 0; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; color: #475569;">T5</button>
+                        <button type="button" class="btn-day-checkbox" data-day="5"
+                            style="flex: 1; padding: 6px 0; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; color: #475569;">T6</button>
+                        <button type="button" class="btn-day-checkbox" data-day="6"
+                            style="flex: 1; padding: 6px 0; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; color: #475569;">T7</button>
+                        <button type="button" class="btn-day-checkbox" data-day="0"
+                            style="flex: 1; padding: 6px 0; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; color: #475569;">CN</button>
+                    </div>
+                </div>
+
+                <div id="repeat-until-group" style="display: none; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 11px; font-weight: 600; color: #ef4444;">Repeat Until</label>
+                    <input type="date" id="sched-repeat-until"
+                        style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                </div>
+                <button type="submit"
+                    style="padding: 8px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; margin-top: 5px;">Save
+                    Slot</button>
+            </form>
+        </div>
+
+        <div class="category-filters"
+            style="background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+            <span
+                style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.05em;">Categories</span>
+            <label
+                style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                <input type="checkbox" class="filter-cate" value="learning" checked style="accent-color: #2563eb;">
+                <span
+                    style="width: 12px; height: 12px; background: #2563eb; border-radius: 3px; display: inline-block;"></span>
+                Learning
+            </label>
+            <label
+                style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                <input type="checkbox" class="filter-cate" value="work" checked style="accent-color: #ef4444;">
+                <span
+                    style="width: 12px; height: 12px; background: #ef4444; border-radius: 3px; display: inline-block;"></span>
+                Work
+            </label>
+            <label
+                style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                <input type="checkbox" class="filter-cate" value="personal" checked style="accent-color: #10b981;">
+                <span
+                    style="width: 12px; height: 12px; background: #10b981; border-radius: 3px; display: inline-block;"></span>
+                Personal
+            </label>
+        </div>
+    </div>
+
+    <div class="calendar-main-board"
+        style="flex: 1; background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden;">
+        <div class="calendar-top-bar"
+            style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f1f5f9; background: #f8fafc;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <button onclick="navigateTime(-1)"
+                    style="padding: 6px 12px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-weight: 600; color: #475569;"><i
+                        class="fa-solid fa-chevron-left"></i></button>
+                <button onclick="navigateTime(1)"
+                    style="padding: 6px 12px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-weight: 600; color: #475569;"><i
+                        class="fa-solid fa-chevron-right"></i></button>
+                <button onclick="jumpToToday()"
+                    style="padding: 6px 14px; border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; cursor: pointer; font-weight: 600; color: #475569; font-size: 13px;">Today</button>
+            </div>
+            <h2 id="calendar-view-title" style="font-size: 18px; font-weight: 700; color: #1e293b; margin: 0;">Loading
+                Period...</h2>
+            <div class="view-switcher"
+                style="display: flex; gap: 4px; background: #e2e8f0; padding: 3px; border-radius: 8px;">
+                <button class="btn-view" data-view="day" onclick="switchView('day')"
+                    style="padding: 6px 14px; border: none; background: transparent; color: #475569; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">Day</button>
+                <button class="btn-view" data-view="week" onclick="switchView('week')"
+                    style="padding: 6px 14px; border: none; background: transparent; color: #475569; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">Week</button>
+                <button class="btn-view active" data-view="month" onclick="switchView('month')"
+                    style="padding: 6px 14px; border: none; background: #fff; color: #1e293b; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">Month</button>
+            </div>
+        </div>
+        <div id="schedule-board-content" style="padding: 15px; min-height: 480px;"></div>
     </div>
 </div>
+<!-- 💡 PHƯƠNG ÁN 3: POPUP MODAL XEM CHI TIẾT VÀ CẬP NHẬT TÊN TÁC VỤ -->
+<div id="schedule-detail-modal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(2px);">
+    <div
+        style="background: #fff; padding: 20px; border-radius: 12px; width: 340px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 12px; border: 1px solid #e2e8f0;">
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #1e293b;"><i class="fa-solid fa-circle-info"
+                    style="color: #2563eb; margin-right: 6px;"></i>Chi tiết lịch trình</h3>
+            <button onclick="closeScheduleModal()"
+                style="background: transparent; border: none; font-size: 18px; cursor: pointer; color: #94a3b8;">&times;</button>
+        </div>
 
-<section class="schedule-form-card" style="margin-top: 20px; margin-bottom: 20px;">
-    <h3 class="section-title">Add Weekly Slot</h3>
-    <form action="/schedules" method="POST" class="schedule-inline-form">
-        <div class="form-group flex-2">
-            <label>Subject / Activity Name</label>
-            <input type="text" name="title" placeholder="e.g., Teaching English, Node.js" required>
-        </div>
-        <div class="form-group flex-1">
-            <label>Day of Week</label>
-            <select name="dayOfWeek">
-                <option value="2">Monday</option>
-                <option value="3">Tuesday</option>
-                <option value="4">Wednesday</option>
-                <option value="5">Thursday</option>
-                <option value="6">Friday</option>
-                <option value="7">Saturday</option>
-                <option value="8">Sunday</option>
-            </select>
-        </div>
-        <div class="form-group flex-1">
-            <label>Start Time</label>
-            <input type="time" name="startTime" required>
-        </div>
-        <div class="form-group flex-1">
-            <label>End Time</label>
-            <input type="time" name="endTime" required>
-        </div>
-        <button type="submit" class="btn-add-schedule">📅 Add Slot</button>
-    </form>
-</section>
+        <!-- Ô input ẩn để giữ ID của slot đang sửa -->
+        <input type="hidden" id="modal-slot-id">
 
-<section class="timetable-container">
-    <table class="timetable-table">
-        <thead>
-            <tr>
-                <th>Time Slot</th>
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-                <th>Sat</th>
-                <th>Sun</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="time-col">08:00 - 11:00</td>
-                <td>
-                    <div class="slot-box color-blue">Learning Node.js</div>
-                </td>
-                <td></td>
-                <td>
-                    <div class="slot-box color-blue">Learning Node.js</div>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                    <div class="slot-box color-navy">Teaching English</div>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td class="time-col">14:00 - 17:00</td>
-                <td></td>
-                <td>
-                    <div class="slot-box color-cyan">IELTS Practice</div>
-                </td>
-                <td></td>
-                <td>
-                    <div class="slot-box color-cyan">IELTS Practice</div>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
-</section>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+            <label style="font-size: 11px; font-weight: 600; color: #64748b;">Tên hoạt động</label>
+            <input type="text" id="modal-slot-title"
+                style="padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 500; color: #1e293b;">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                <label style="font-size: 11px; font-weight: 600; color: #64748b;">Giờ bắt đầu</label>
+                <input type="time" id="modal-slot-start"
+                    style="padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #f8fafc; color: #64748b;"
+                    disabled>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                <label style="font-size: 11px; font-weight: 600; color: #64748b;">Giờ kết thúc</label>
+                <input type="time" id="modal-slot-end"
+                    style="padding: 6px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; background: #f8fafc; color: #64748b;"
+                    disabled>
+            </div>
+        </div>
+
+        <button onclick="updateScheduleTitleApi()"
+            style="padding: 10px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+        </button>
+    </div>
+</div>
+<script>
+    function toggleScheduleForm() {
+        const formCard = document.getElementById('schedule-form-card');
+        const btnToggle = document.getElementById('btn-toggle-form');
+        if (formCard.style.display === 'none' || formCard.style.display === '') {
+            formCard.style.display = 'block';
+            btnToggle.innerHTML = `<i class="fa-solid fa-xmark"></i> Close Form`;
+            btnToggle.style.background = '#64748b';
+        } else {
+            formCard.style.display = 'none';
+            btnToggle.innerHTML = `<i class="fa-solid fa-plus"></i> Add New Slot`;
+            btnToggle.style.background = '#2563eb';
+        }
+    }
+
+    // 💡 HÀM ẨN HIỆN THÔNG MINH CHO CÁC CHẾ ĐỘ LẶP
+    function toggleRepeatUntil() {
+        const type = document.getElementById('sched-type').value;
+        const repeatGroup = document.getElementById('repeat-until-group');
+        const weeklyDaysGroup = document.getElementById('weekly-days-group');
+
+        if (type === 'weekly') {
+            repeatGroup.style.display = 'flex';
+            weeklyDaysGroup.style.display = 'flex'; // Hiện thanh chọn thứ
+            document.getElementById('sched-repeat-until').required = true;
+        } else if (type === 'monthly') {
+            repeatGroup.style.display = 'flex';
+            weeklyDaysGroup.style.display = 'none'; // Ẩn chọn thứ đi vì lặp theo ngày số
+            document.getElementById('sched-repeat-until').required = true;
+        } else {
+            repeatGroup.style.display = 'none';
+            weeklyDaysGroup.style.display = 'none';
+            document.getElementById('sched-repeat-until').required = false;
+        }
+    }
+</script>
+<script src="/js/schedule.js"></script>
