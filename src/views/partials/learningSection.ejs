@@ -1,22 +1,25 @@
 <div class="header-content">
     <div>
         <h1 class="welcome-title">Learning Hub</h1>
-        <p style="color: #6c757d; font-size: 14px; margin-top: 4px;">Manage course documents and train with smart AI
-            quizzes.</p>
+        <p style="color: #6c757d; font-size: 14px; margin-top: 4px;">
+            Manage course documents and train with smart AI quizzes.
+        </p>
     </div>
 </div>
 
 <div class="learning-sub-menu"
     style="display: flex; gap: 8px; margin-top: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
-    <button class="btn-sub-tab active" data-target="panel-subjects" onclick="switchLearningSubTab('panel-subjects')"
+    <button id="tab-btn-subjects" class="btn-sub-tab active" data-target="panel-subjects"
+        onclick="switchLearningSubTab('panel-subjects')"
         style="padding: 8px 16px; border: none; background: #2563eb; color: white; font-weight: 600; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px;">
         <i class="fa-solid fa-book"></i> Courses & Materials
     </button>
-    <button class="btn-sub-tab" data-target="panel-stopwatch" onclick="switchLearningSubTab('panel-stopwatch')"
+    <button id="tab-btn-stopwatch" class="btn-sub-tab" data-target="panel-stopwatch"
+        onclick="switchLearningSubTab('panel-stopwatch')"
         style="padding: 8px 16px; border: none; background: transparent; color: #64748b; font-weight: 600; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px;">
         <i class="fa-solid fa-stopwatch"></i> Study Timer
     </button>
-    <button class="btn-sub-tab" data-target="panel-quiz" onclick="switchLearningSubTab('panel-quiz')"
+    <button id="tab-btn-quiz" class="btn-sub-tab" data-target="panel-quiz" onclick="switchLearningSubTab('panel-quiz')"
         style="padding: 8px 16px; border: none; background: transparent; color: #64748b; font-weight: 600; border-radius: 6px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px;">
         <i class="fa-solid fa-brain"></i> AI Quiz Generator
     </button>
@@ -44,10 +47,12 @@
                     style="font-size: 36px; color: #cbd5e1; margin-bottom: 8px; display: block;"></i>
                 Select a course from the left menu to view materials.
             </div>
+
             <div id="subject-detail-content" style="display: none; flex-direction: column; gap: 15px;">
                 <h2 id="selected-subject-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #1e293b;">
                 </h2>
                 <input type="hidden" id="selected-subject-id">
+
                 <div
                     style="display: flex; gap: 8px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
                     <input type="text" id="new-doc-title" placeholder="Material name..."
@@ -57,11 +62,12 @@
                     <button onclick="createNewDocumentApi()"
                         style="padding: 6px 14px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px;">Save</button>
                 </div>
+
                 <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
                     <thead>
                         <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
                             <th style="padding: 8px;">Document Title</th>
-                            <th style="padding: 8px; width: 80px;">Action</th>
+                            <th style="padding: 8px; width: 160px; text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="documents-table-body"></tbody>
@@ -72,35 +78,114 @@
 
     <div id="panel-stopwatch" class="learning-panel"
         style="display: none; background: #fff; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; flex-direction: column; align-items: center; gap: 20px; max-width: 450px; margin: 0 auto;">
-        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: #475569; text-transform: uppercase;">Deep Work
-            Stopwatch</h3>
+
+        <h3 style="margin: 0; font-size: 14px; font-weight: 700; color: #475569; text-transform: uppercase;">
+            Deep Work Stopwatch
+        </h3>
+
+        <div style="width: 100%; display: flex; flex-direction: column; gap: 6px; align-items: center;">
+            <label
+                style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+                Current Subject
+            </label>
+            <select id="timer-subject-select"
+                style="width: 80%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 600; color: #1e293b; outline: none; background: #f8fafc; cursor: pointer; text-align: center;">
+                <option value="">-- Select Subject to Log --</option>
+            </select>
+        </div>
+
         <div id="stopwatch-display"
-            style="font-size: 54px; font-weight: 700; color: #1e293b; font-family: monospace; letter-spacing: 2px; padding: 10px 40px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
-            00:00:00</div>
+            style="font-size: 54px; font-weight: 700; color: #1e293b; font-family: monospace; letter-spacing: 2px; padding: 10px 40px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; width: 100%; text-align: center;">
+            00:00:00
+        </div>
+
         <div style="display: flex; gap: 10px; width: 100%;">
             <button id="btn-sw-start" onclick="startStopwatch()"
-                style="flex: 1; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">▶
-                Start Session</button>
+                style="flex: 2; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                ▶ Start Session
+            </button>
             <button id="btn-sw-stop" onclick="stopStopwatch()"
-                style="flex: 1; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;"
-                disabled>⏸ Pause</button>
-            <button id="btn-sw-reset" onclick="resetStopwatch()"
-                style="padding: 10px 15px; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer;">🔄</button>
+                style="flex: 2; padding: 10px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;"
+                disabled>
+                ⏸ Pause
+            </button>
+            <button id="btn-sw-reset" onclick="triggerSaveAndResetTimer()" title="Save & Reset Session"
+                style="flex: 1; padding: 10px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center;">
+                💾
+            </button>
         </div>
+
+        <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
+            <button onclick="toggleAmbientSound('rain')" id="btn-sound-rain"
+                style="padding: 6px 14px; border: 1px solid #e2e8f0; background: #fff; border-radius: 20px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s;">
+                🌧️ Rain
+            </button>
+            <button onclick="toggleAmbientSound('noise')" id="btn-sound-noise"
+                style="padding: 6px 14px; border: 1px solid #e2e8f0; background: #fff; border-radius: 20px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s;">
+                🎛️ Grey Noise
+            </button>
+            <button onclick="toggleAmbientSound('lofi')" id="btn-sound-lofi"
+                style="padding: 6px 14px; border: 1px solid #e2e8f0; background: #fff; border-radius: 20px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s;">
+                ☕ Cafe Ambience
+            </button>
+            <button onclick="toggleAmbientSound('forest')" id="btn-sound-forest"
+                style="padding: 6px 14px; border: 1px solid #e2e8f0; background: #fff; border-radius: 20px; font-size: 12px; font-weight: 600; color: #475569; cursor: pointer; transition: all 0.2s;">
+                🌲 Forest
+            </button>
+        </div>
+
+        <audio id="audio-ambient" loop></audio>
     </div>
 
     <div id="panel-quiz" class="learning-panel"
-        style="display: none; background: #fff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; min-height: 400px;">
-        <h3 style="margin: 0 0 10px 0; font-size: 16px; font-weight: 700; color: #1e293b;"><i class="fa-solid fa-robot"
-                style="color: #2563eb;"></i> AI Quiz Generator</h3>
-        <div
-            style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; font-size: 13px; color: #1e40af; line-height: 1.5;">
-            🚀 <strong>Welcome Tuấn! The AI Exam Preparation environment is ready.</strong><br>
-            In the upcoming step, we will extract raw data from the URLs you saved in Tab 1, pipe it to the AI, and
-            generate direct interactive multi-choice quizzes for you right here!
+        style="display: none; background: #fff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; min-height: 400px; flex-direction: column; gap: 15px;">
+        <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #1e293b;">
+            <i class="fa-solid fa-robot" style="color: #2563eb; margin-right: 6px;"></i> AI Interactive Quiz
+        </h3>
+
+        <div id="quiz-loading"
+            style="display: none; text-align: center; color: #2563eb; padding: 30px 0; font-weight: 600;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 28px; margin-bottom: 8px;"></i><br>
+            AI Professor is analyzing text and crafting your quiz... Please wait!
+        </div>
+
+        <div id="quiz-placeholder" style="text-align: center; color: #94a3b8; padding: 5px 0;">
+            Go to "Courses & Materials" tab and click "⚡ Generate Quiz" on any document to start practicing.
+        </div>
+
+        <div id="quiz-box" style="display: none; flex-direction: column; gap: 20px;">
+            <div id="quiz-questions-container" style="display: flex; flex-direction: column; gap: 15px;"></div>
+            <button onclick="submitQuizAnswers()"
+                style="padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; margin-top: 10px;">
+                💯 Submit Answers
+            </button>
+            <div id="quiz-result-score"
+                style="display: none; padding: 15px; border-radius: 8px; text-align: center; font-size: 16px; font-weight: 700;">
+            </div>
         </div>
     </div>
 
+</div>
+
+<div id="text-input-modal"
+    style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 9999;">
+    <div
+        style="background: white; padding: 20px; border-radius: 12px; width: 500px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: #1e293b;">Provide Reference Text for AI</h3>
+        <p style="margin:0; font-size: 12px; color: #64748b;">Paste the study notes or text content of this material
+            below for Gemini AI to generate questions.</p>
+        <input type="hidden" id="modal-doc-id">
+        <textarea id="modal-extracted-text" rows="8"
+            placeholder="Paste your study notes or chapter summary here (Minimum 10 characters)..."
+            style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; resize: none; font-family: sans-serif;"></textarea>
+        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+            <button onclick="closeTextInputModal()"
+                style="padding: 8px 14px; background: #e2e8f0; color: #475569; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px;">Cancel</button>
+            <button onclick="submitTextAndGenerateQuiz()"
+                style="padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 12px;">🚀
+                Generate Quiz</button>
+        </div>
+    </div>
 </div>
 
 <script src="/js/learning.js"></script>

@@ -37,7 +37,7 @@ app.use(session({
 app.use('/', authRoutes); 
 app.use('/api/tasks', taskRoutes);
 app.use(scheduleRoutes); 
-app.use('/', learningRoutes); // Thông cổng API Learning Hub
+app.use('/api/learning', learningRoutes); // Thông cổng API Learning Hub
 
 // 7. KÍCH HOẠT SERVER
 app.listen(PORT, () => {
