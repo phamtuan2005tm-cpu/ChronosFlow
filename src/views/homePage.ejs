@@ -7,7 +7,7 @@
     <title>ChronosFlow</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/css/homePageStyles.css">
 
@@ -25,7 +25,6 @@
         /* 🔴 1. XỬ LÝ KHI SIDEBAR CO LẠI (COLLAPSED) */
         .sidebar.collapsed {
             width: 75px !important;
-            /* Độ rộng tối ưu cho chế độ icon */
             padding-left: 8px !important;
             padding-right: 8px !important;
         }
@@ -38,7 +37,7 @@
             padding-left: 20px !important;
         }
 
-        /* Ẩn chữ Menu, ẩn logo dài bằng ảnh của Tuấn */
+        /* Ẩn chữ Menu, ẩn logo dài bằng ảnh */
         .sidebar.collapsed .menu-text,
         .sidebar.collapsed .brand-logo img,
         .sidebar.collapsed .btn-logout span>span {
@@ -76,7 +75,7 @@
             display: flex !important;
         }
 
-        /* 🔴 2. BẢO VỆ ICON: ÉP CÁC ICON MENU VÀO TRUNG TÂM HÀNG DỌC (FIX LỖI MẤT ICON) */
+        /* 🔴 2. BẢO VỆ ICON: ÉP CÁC ICON MENU VÀO TRUNG TÂM HÀNG DỌC */
         .sidebar.collapsed .nav-menu {
             padding: 0 !important;
             margin: 0 !important;
@@ -95,7 +94,6 @@
         .sidebar.collapsed .nav-menu .nav-item a {
             display: flex !important;
             justify-content: center !important;
-            /* Đẩy icon vào giữa rốn */
             align-items: center !important;
             width: 50px !important;
             height: 45px !important;
@@ -108,7 +106,6 @@
         .sidebar.collapsed .nav-menu .nav-item a i {
             margin: 0 !important;
             font-size: 20px !important;
-            /* Tăng kích thước lên nhìn cho nét */
             display: inline-block !important;
             visibility: visible !important;
             opacity: 1 !important;
@@ -146,15 +143,13 @@
                 <div class="brand-logo" style="margin: 0;">
                     <img src="/images/Dark-Logo.png" alt="ChronosFlow Logo">
                 </div>
-
             </div>
             <button class="nav-item" onclick="toggleSidebar()"
                 style="background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 18px; padding: 5px; display: flex; align-items: center;">
-                <a href="#"><i class="fa-solid fa-bars" id="sidebar-toggle-icon"></i><span class="menu-text"></span>
-                    Menu</span></a>
+                <a href="#"><i class="fa-solid fa-bars" id="sidebar-toggle-icon"></i><span
+                        class="menu-text">Menu</span></a>
             </button>
             <ul class="nav-menu">
-
                 <li class="nav-item active" data-tab="dashboard">
                     <a href="#"><i class="fa-solid fa-house"></i><span class="menu-text">Dashboard</span></a>
                 </li>
@@ -166,6 +161,9 @@
                 </li>
                 <li class="nav-item" data-tab="learning">
                     <a href="#"><i class="fa-solid fa-book"></i><span class="menu-text">Learning</span></a>
+                </li>
+                <li class="nav-item" data-tab="finance">
+                    <a href="#"><i class="fa-solid fa-money-bill-wave"></i><span class="menu-text">Finance</span></a>
                 </li>
                 <li class="nav-item" data-tab="settings">
                     <a href="#"><i class="fa-solid fa-gear"></i><span class="menu-text">Settings</span></a>
@@ -179,7 +177,6 @@
     </aside>
 
     <main class="main-content">
-
         <div id="dashboard" class="tab-content active">
             <%- include('partials/dashboardSection') %>
         </div>
@@ -196,6 +193,10 @@
             <%- include('partials/learningSection') %>
         </div>
 
+        <div id="finance" class="tab-content">
+            <%- include('partials/financeSection') %>
+        </div>
+
         <div id="settings" class="tab-content">
             <div class="header-content">
                 <h1 class="welcome-title">Settings</h1>
@@ -205,20 +206,17 @@
                 <h3 class="body-title">Settings Feature Coming Soon</h3>
             </div>
         </div>
-
     </main>
 
     <script>
-        // 💡 HÀM TOGGLE ĐÓNG/MỞ SIDEBAR THỜI GIAN THỰC (MỚI THÊM)
+        // 💡 1. HÀM ĐÓNG MỞ SIDEBAR THANH MENU
         function toggleSidebar() {
             const sidebar = document.getElementById('main-sidebar');
             const toggleIcon = document.getElementById('sidebar-toggle-icon');
             if (!sidebar) return;
 
-            // Bật/tắt class .collapsed ảo dựa trên hiệu ứng CSS
             sidebar.classList.toggle('collapsed');
 
-            // Đổi icon Hamburger thành biểu tượng mũi tên chỉ hướng cho chuyên nghiệp
             if (sidebar.classList.contains('collapsed')) {
                 toggleIcon.className = 'fa-solid fa-angles-right';
             } else {
@@ -226,23 +224,41 @@
             }
         }
 
-        // Hàm gọi ngầm API bốc dữ liệu thống kê từ Backend về cập nhật lên UI
+        // 💡 2. FETCH SỐ LIỆU THỐNG KÊ DASHBOARD QUÉT TỪ BACKEND
         function fetchDashboardStats() {
             fetch('/api/dashboard-stats')
                 .then(response => response.json())
                 .then(data => {
                     const totalProjEl = document.getElementById('stat-total-projects');
                     const activeTaskEl = document.getElementById('stat-active-tasks');
-                    if (totalProjEl) totalProjEl.innerText = data.totalProjects;
-                    if (activeTaskEl) activeTaskEl.innerText = data.activeTasks;
+                    if (totalProjEl) totalProjEl.innerText = data.totalProjects || 0;
+                    if (activeTaskEl) activeTaskEl.innerText = data.activeTasks || 0;
                 })
                 .catch(err => console.error('Lỗi fetch số liệu cơ học:', err));
         }
 
-        // Kích hoạt chạy lần đầu tiên ngay khi vừa nạp trang chủ
-        document.addEventListener("DOMContentLoaded", fetchDashboardStats);
+        // 💡 3. LIVE DIGITAL CLOCK ENGINE WITH FULL ENGLISH TIMEFORMAT
+        function startLiveClock() {
+            const timeEl = document.getElementById('live-time');
+            const dateEl = document.getElementById('live-date');
 
-        // Bắt sự kiện chuyển đổi tab menu Sidebar bằng cơ chế an toàn
+            if (!timeEl || !dateEl) return;
+
+            setInterval(() => {
+                const now = new Date();
+                timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: false });
+                const options = { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' };
+                dateEl.innerText = `⏳ ${now.toLocaleDateString('en-US', options)}`;
+            }, 1000);
+        }
+
+        // Kích hoạt nạp đồng hồ khi mở trang chủ
+        document.addEventListener("DOMContentLoaded", () => {
+            startLiveClock();
+            fetchDashboardStats();
+        });
+
+        // 💡 4. ĐIỀU HƯỚNG CHUYỂN TAB SIDEBAR (ĐÃ LOẠI BỎ TOÀN BỘ CÁC HÀM CLASH GÂY LỖI 404)
         document.querySelectorAll('.nav-menu .nav-item').forEach(item => {
             item.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -265,196 +281,15 @@
                     targetTab.classList.add('active');
                 }
 
+                // Chuyển giao toàn quyền nạp dữ liệu cho file /js/tasks.js xử lý
                 if (targetTabId === 'dashboard') {
                     fetchDashboardStats();
                 } else if (targetTabId === 'tasks') {
-                    loadAllTasks();
+                    if (typeof window.loadActiveProjects === 'function') {
+                        window.loadActiveProjects();
+                    }
                 }
             });
-        });
-
-        // 🔄 HÀM 1: FETCH DANH SÁCH TASK TỪ BACKEND VÀ ĐỔ VÀO CÁC CỘT KANBAN
-        // 🔥 HÀM LOAD VÀ PHÂN PHỐI TẤT CẢ TÁC VỤ LÊN KANBAN BOARD
-        function loadAllTasks() {
-            fetch('/api/tasks')
-                .then(res => res.json())
-                .then(tasks => {
-                    // 1. Dọn sạch ruột 3 cột trước khi bơm dữ liệu mới tránh bị lặp đè
-                    document.getElementById('list-todo').innerHTML = '';
-                    document.getElementById('list-progress').innerHTML = '';
-                    document.getElementById('list-done').innerHTML = '';
-
-                    // Khởi tạo lại bộ đếm số lượng task trên đỉnh cột
-                    let todoCount = 0;
-                    let progressCount = 0;
-                    let doneCount = 0;
-
-                    tasks.forEach(task => {
-                        // Định dạng lại ngày hiển thị cho đẹp (nếu task có dueDate)
-                        const formattedDate = task.dueDate ? new Date(task.dueDate).toLocaleString('vi-VN', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            day: '2-digit',
-                            month: '2-digit'
-                        }) : 'Không có hạn';
-
-                        // 2. 💡 ĐÚC CHUỖI HTML: Thêm draggable="true" và sự kiện ondragstart để kích nổ kéo thả
-                        const taskHTML = `
-                    <div class="task-item border-${task.priority.toLowerCase()}" 
-                         draggable="true" 
-                         ondragstart="handleDragStart(event, ${task.id})">
-                        <h4 class="task-item-title">${task.title}</h4>
-                        <div class="task-meta">
-                            <span class="badge priority-${task.priority.toLowerCase()}">${task.priority}</span>
-                            <span class="task-date">⏰ ${formattedDate}</span>
-                        </div>
-
-                        <div class="task-actions" style="margin-top: 12px; display: flex; justify-content: flex-end;">
-                            ${task.status === 'To-Do' ? `<button class="btn-action btn-next" style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;" onclick="updateTaskStatus(${task.id}, 'In Progress')">Start ➔</button>` : ''}
-                            ${task.status === 'In Progress' ? `<button class="btn-action btn-next" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;" onclick="updateTaskStatus(${task.id}, 'Done')">Finish ✓</button>` : ''}
-                            ${task.status === 'Done' ? `<button class="btn-action" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;" onclick="deleteTask(${task.id})">🗑️ Xóa</button>` : ''}
-                        </div>
-                    </div>
-                `;
-
-                        // 3. 💡 PHÂN PHỐI THẺ: Kiểm tra chính xác chữ hoa/thường khớp 100% với Database
-                        if (task.status === 'To-Do') {
-                            document.getElementById('list-todo').insertAdjacentHTML('beforeend', taskHTML);
-                            todoCount++;
-                        } else if (task.status === 'In Progress') {
-                            document.getElementById('list-progress').insertAdjacentHTML('beforeend', taskHTML);
-                            progressCount++;
-                        } else if (task.status === 'Done') { // ➔ Đã sửa chữ D viết hoa chuẩn chỉnh
-                            document.getElementById('list-done').insertAdjacentHTML('beforeend', taskHTML);
-                            doneCount++;
-                        }
-                    });
-
-                    // 4. Cập nhật lại số lượng hiển thị trên badge đỉnh mỗi cột
-                    document.getElementById('count-todo').innerText = todoCount;
-                    document.getElementById('count-progress').innerText = progressCount;
-                    document.getElementById('count-done').innerText = doneCount;
-                })
-                .catch(err => console.error('❌ Lỗi khi nạp danh sách Tasks:', err));
-        }
-
-        // ➕ HÀM 2: CHẶN SỰ KIỆN SUBMIT FORM VÀ BẮN API TẠO TASK MỚI
-        document.addEventListener("DOMContentLoaded", () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('tab') === 'tasks') { loadAllTasks(); }
-
-            const taskForm = document.getElementById('kanban-task-form');
-            if (taskForm) {
-                taskForm.addEventListener('submit', function (e) {
-                    e.preventDefault();
-
-                    const title = document.getElementById('task-title').value;
-                    const priority = document.getElementById('task-priority').value;
-                    const dueDate = document.getElementById('task-duedate').value;
-
-                    fetch('/api/tasks', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, priority, dueDate })
-                    })
-                        .then(response => {
-                            if (!response.ok) throw new Error('Backend từ chối tạo task!');
-                            return response.json();
-                        })
-                        .then(newTask => {
-                            console.log("➕ Tạo Task thành công ngầm:", newTask);
-                            loadAllTasks();
-                            taskForm.reset();
-                        })
-                        .catch(err => alert('Có lỗi cơ học khi thêm Task: ' + err.message));
-                });
-            }
-        });
-
-        // ➔ HÀM 3: BẮN API CẬP NHẬT TRẠNG THÁI MỚI LÊN SERVER
-        function updateTaskStatus(taskId, newStatus) {
-            fetch(`/api/tasks/${taskId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: newStatus })
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('Backend từ chối chuyển trạng thái!');
-                    return response.json();
-                })
-                .then(result => {
-                    loadAllTasks();
-                })
-                .catch(err => alert('Lỗi chuyển cột cơ học: ' + err.message));
-        }
-
-        // 🗑️ HÀM 4: BẮN API XÓA SỔ TASK VĨNH VIỄN
-        function deleteTask(taskId) {
-            if (!confirm('Tuấn có chắc chắn muốn xóa vĩnh viễn Task này không?')) return;
-
-            fetch(`/api/tasks/${taskId}`, {
-                method: 'DELETE'
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('Backend từ chối xóa task!');
-                    return response.json();
-                })
-                .then(result => {
-                    loadAllTasks();
-                })
-                .catch(err => alert('Lỗi xóa task cơ học: ' + err.message));
-        }
-
-        // 🕒 LIVE DIGITAL CLOCK ENGINE WITH FULL ENGLISH TIMEFORMAT
-        function startLiveClock() {
-            const timeEl = document.getElementById('live-time');
-            const dateEl = document.getElementById('live-date');
-
-            if (!timeEl || !dateEl) return;
-
-            setInterval(() => {
-                const now = new Date();
-                timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: false });
-                const options = { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' };
-                dateEl.innerText = `⏳ ${now.toLocaleDateString('en-US', options)}`;
-            }, 1000);
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            startLiveClock();
-        });
-        // 🔥 LOGIC KÉO THẢ KANBAN TRẬN ĐÁNH THỰC TẾ
-
-        // 1. Hàm khởi chạy khi bắt đầu nắm chuột kéo thẻ Task
-        function handleDragStart(e, taskId) {
-            // Ghi nhớ lại ID của task đang kéo vào bộ nhớ tạm của trình duyệt dưới dạng text
-            e.dataTransfer.setData("text/plain", taskId);
-            e.target.style.opacity = "0.5"; // Làm mờ nhẹ thẻ đang kéo nhìn cho thật
-        }
-
-        // 2. Hàm cho phép thả thẻ vào vùng chứa (Mặc định trình duyệt cấm thả nên phải chặn lại)
-        function allowDrop(e) {
-            e.preventDefault();
-        }
-
-        // 3. Hàm kích nổ khi người dùng buông chuột thả thẻ vào cột mới
-        function handleDrop(e, newStatus) {
-            e.preventDefault();
-
-            // Bốc lại ID của thẻ task từ bộ nhớ tạm ra
-            const taskId = e.dataTransfer.getData("text/plain");
-
-            if (taskId) {
-                // Gọi lại chính xác hàm updateTaskStatus sẵn có của Tuấn để bắn API PUT lên MySQL
-                updateTaskStatus(Number(taskId), newStatus);
-            }
-        }
-
-        // Thêm sự kiện bổ trợ: Khi kết thúc kéo (buông chuột dù trúng hay trượt) trả lại độ đậm cũ cho thẻ
-        document.addEventListener("dragend", (e) => {
-            if (e.target.classList.contains('task-item')) {
-                e.target.style.opacity = "1";
-            }
         });
     </script>
 </body>

@@ -13,6 +13,8 @@ const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 const learningRoutes = require('./routes/learningRoutes'); 
+const financeRoutes = require('./routes/financeRoutes');
+
 
 // 3. CẤU HÌNH VIEW ENGINE (💡 ĐÃ SỬA: Bỏ chữ 'src/' vì app.js đã ở trong src)
 app.set('view engine', 'ejs');
@@ -35,9 +37,10 @@ app.use(session({
 
 // 6. ĐẤU NỐI ĐỒNG BỘ CÁC CỔNG ROUTE
 app.use('/', authRoutes); 
-app.use('/api/tasks', taskRoutes);
+app.use('/api', taskRoutes);
 app.use(scheduleRoutes); 
 app.use('/api/learning', learningRoutes); // Thông cổng API Learning Hub
+app.use('/api/finance', financeRoutes);
 
 // 7. KÍCH HOẠT SERVER
 app.listen(PORT, () => {

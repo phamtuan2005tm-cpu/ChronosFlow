@@ -1,78 +1,132 @@
 const db = require('../config/database');
 
-exports.getAllTask = async (req, res) => {
-    const userId = req.session.user.id;
+// 1.1. Create new project workspace
+exports.createProject = async (req, res) => {
     try {
-        const [rows] = await db.execute("SELECT * FROM tasks WHERE user_id = ? ORDER BY due_date ASC", [userId]);
+        const { name, priority, startDate, dueDate } = req.body;
+        const userId = req.session.user.id;
+        if (!name || !dueDate || !startDate) {
+            return res.status(400).json({ success: false, message: "Please provide all required fields!" });
+        }
+        const sql = 'INSERT INTO projects (user_id, name, priority, start_date, due_date, status) VALUES (?, ?, ?, ?, ?, ?)';
+        await db.execute(sql, [userId, name.trim(), priority || 'Medium', startDate, dueDate, 'Active']);
+        return res.status(201).json({ success: true, message: "Project launched successfully!" });
+    } catch (error) {
+        console.error("Error creating project:", error);
+        return res.status(500).json({ success: false, message: "Server error during project initiation." });
+    }
+};
 
+// 1.2. Get all ongoing projects
+exports.getActiveProjects = async (req, res) => {
+    try {
+        const userId = req.session.user.id;
+        const [rows] = await db.execute("SELECT * FROM projects WHERE user_id = ? AND status = 'Active' ORDER BY due_date ASC", [userId]);
         return res.status(200).json(rows);
     } catch (error) {
-        console.error("Có lỗi ở phần hiển thị nhiệm vụ, cụ thể là:", error);
-        return res.status(500).json({message : " Lỗi hệ thống backend khi hiện dữ liệu "})
+        console.error("Error fetching active projects:", error);
+        return res.status(500).json({ message: "Server error fetching active projects." });
     }
-}
+};
+
+// 1.3. Permanently purge a project
+exports.deleteProject = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await db.execute("DELETE FROM projects WHERE id = ?", [id]);
+        return res.status(200).json({ success: true, message: "Project purged!" });
+    } catch (error) {
+        console.error("Error purging project:", error);
+        return res.status(500).json({ success: false, message: "Server error." });
+    }
+};
+
+// 1.4. Complete and archive a project
+exports.completeProject = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await db.execute("UPDATE projects SET status = 'Completed' WHERE id = ?", [id]);
+        return res.status(200).json({ success: true, message: "Project archived successfully!" });
+    } catch (error) {
+        console.error("Error archiving project:", error);
+        return res.status(500).json({ success: false, message: "Server error." });
+    }
+};
+
+// 2.1. GET TASKS FILTERED BY ACTIVE PROJECT
+exports.getAllTask = async (req, res) => {
+    if (!req.session.user || !req.session.user.id) return res.status(401).json([]);
+    const userId = req.session.user.id;
+    const { projectId } = req.query;
+    try {
+        if (!projectId) return res.status(200).json([]);
+        const sql = "SELECT * FROM tasks WHERE user_id = ? AND project_id = ? ORDER BY due_date ASC";
+        const [rows] = await db.execute(sql, [userId, projectId]);
+        return res.status(200).json(rows);
+    } catch (error) {
+        return res.status(500).json([]);
+    }
+};
+
+// 2.2. CREATE NEW TASK UNDER SPECIFIC PROJECT
 exports.createNewTask = async (req, res) => {
     try {
-        // 1. Phải bốc dữ liệu từ trong cái hộp req.body ra TRƯỚC để JavaScript định nghĩa biến
-        const { title, priority, dueDate } = req.body;
+        const { title, priority, dueDate, projectId } = req.body;
         const userId = req.session.user.id;
-        // 2. Bẫy dữ liệu trống
-        if (!title || !dueDate) {
-            return res.status(400).json({ message: "Nhập đủ thông tin coi" });
+        if (!title || !dueDate || !projectId) {
+            return res.status(400).json({ message: "Missing fields!" });
         }
-
-        // 3. Chuẩn bị câu lệnh SQL vật lý (5 cột tương ứng 5 dấu hỏi chấm)
-        const sql = 'INSERT INTO tasks (title, priority, due_date, status, user_id) VALUES (?, ?, ?, ?, ?)';
-        
-        // 4. Kích nổ lệnh cắm vào MySQL (Đảm bảo bảng users của bạn đã có ít nhất một user có id = 1 nhé)
-        const [result] = await db.execute(sql, [title, priority, dueDate, 'To-Do', userId]);
-
-        // 5. Trả dữ liệu JSON sạch về cho Frontend vẽ giao diện
-        return res.status(201).json({
-            id: result.insertId,
-            title: title,
-            priority: priority,
-            due_date: dueDate,
-            status: 'To-Do'
-        });
-
+        const sql = 'INSERT INTO tasks (title, priority, due_date, status, user_id, project_id) VALUES (?, ?, ?, ?, ?, ?)';
+        const [result] = await db.execute(sql, [title, priority || 'Medium', dueDate, 'To-Do', userId, projectId]);
+        return res.status(201).json({ success: true, id: result.insertId });
     } catch (error) {
-        console.error("🚨 LỖI CHI TIẾT TỪ DATABASE:");
-        console.error(error); 
-        return res.status(500).json({ message: "Lỗi hệ thống backend khi tạo nhiệm vụ mới" });
+        return res.status(500).json({ message: "Server error." });
     }
 };
 
-// 📡 API 3: CẬP NHẬT TRẠNG THÁI TASK (PUT /api/tasks/:id)
+// 2.3. UPDATE TASK STATUS VIA DRAG & DROP (FIXED KIỂU DỮ LIỆU)
 exports.updateTaskStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    if (!status) return res.status(400).json({ success: false, message: "Missing status." });
     try {
-        const { id } = req.params;   // Hốt cái ID của Task nằm trên thanh URL (VD: /api/tasks/5)
-        const { status } = req.body; // Hốt cái trạng thái mới ('In Progress' hoặc 'Done') từ Body gửi lên
-
-        // Chọc lệnh SQL UPDATE thô xuống MySQL vật lý
-        const sql = 'UPDATE tasks SET status = ? WHERE id = ?';
-        await db.execute(sql, [status, id]);
-
-        // Trả về tín hiệu JSON báo thành công cho Front-end mừng
-        return res.status(200).json({ message: 'Cập nhật trạng thái thành công nha!' });
+        const sql = "UPDATE tasks SET status = ? WHERE id = ?";
+        await db.execute(sql, [status, parseInt(id, 10)]);
+        return res.status(200).json({ success: true, message: "Status synchronized!" });
     } catch (error) {
-        console.error("Lỗi cập nhật trạng thái ở Backend:", error);
-        return res.status(500).json({ message: 'Lỗi hệ thống không thể chuyển trạng thái task' });
+        return res.status(500).json({ success: false, message: error.message });
     }
 };
-// 📡 API 4: XÓA TASK BIỆT LẬP (DELETE /api/tasks/:id)
+
+// 2.4. DELETE ISOLATED TASK
 exports.deleteTask = async (req, res) => {
     try {
-        const { id } = req.params; // Hốt cái ID của Task cần xóa trên thanh URL xuống
-
-        // Chọc lệnh SQL DELETE thô xuống MySQL vật lý để xóa sổ vĩnh viễn dòng này
-        const sql = 'DELETE FROM tasks WHERE id = ?';
-        await db.execute(sql, [id]);
-
-        // Trả tín hiệu JSON báo Front-end biết đường mà xóa thẻ trên màn hình
-        return res.status(200).json({ message: 'Đã xóa task thành công khỏi vũ trụ!' });
+        const { id } = req.params;
+        await db.execute('DELETE FROM tasks WHERE id = ?', [id]);
+        return res.status(200).json({ success: true });
     } catch (error) {
-        console.error("Lỗi xóa task ở Backend:", error);
-        return res.status(500).json({ message: 'Lỗi hệ thống không thể xóa task' });
+        return res.status(500).json({ message: 'Server error.' });
     }
-}; 
+};
+
+// 3.1. Write a new timeline log
+exports.createTaskLog = async (req, res) => {
+    try {
+        const { taskId, logText } = req.body;
+        await db.execute("INSERT INTO task_logs (task_id, log_text) VALUES (?, ?)", [taskId, logText.trim()]);
+        return res.status(201).json({ success: true });
+    } catch (error) {
+        return res.status(500).json({ message: "Server error." });
+    }
+};
+
+// 3.2. Fetch logs
+exports.getTaskLogs = async (req, res) => {
+    try {
+        const { taskId } = req.params;
+        const [rows] = await db.execute("SELECT * FROM task_logs WHERE task_id = ? ORDER BY created_at DESC", [taskId]);
+        return res.status(200).json(rows);
+    } catch (error) {
+        return res.status(500).json([]);
+    }
+};
