@@ -233,16 +233,34 @@ window.loadTaskLogsTimeline = function(taskId) {
 window.submitTaskLogApi = function() {
     const taskId = document.getElementById('modal-active-task-id').value;
     const input = document.getElementById('task-log-input');
+    if (!input) return;
+    
     const logText = input.value.trim();
-    if (!logText) return;
+    if (!logText) {
+        alert("Tuấn ơi, vui lòng nhập nội dung bước tiến độ trước khi bấm lưu nhé!");
+        return;
+    }
 
     fetch('/api/task/log', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ taskId, logText })
     })
-    .then(res => res.json())
-    .then(() => { input.value = ''; window.loadTaskLogsTimeline(taskId); });
+    .then(res => {
+        if (!res.ok) throw new Error("Server rejected logging payload.");
+        return res.json();
+    })
+    .then(data => {
+        if (data.success) {
+            console.log("📝 Log step injected successfully into timeline!");
+            input.value = ''; // Dọn sạch ô gõ chữ
+            window.loadTaskLogsTimeline(taskId); // Ép dòng thời gian nạp lại tức thì
+        }
+    })
+    .catch(err => {
+        console.error("🚨 Log submit crash:", err);
+        alert("Lỗi ghi nhận tiến độ: " + err.message);
+    });
 };
 
 window.deleteProjectApi = function(id, isFromWorkspace = false) {

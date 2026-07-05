@@ -90,9 +90,18 @@ exports.updateTaskStatus = async (req, res) => {
     const { status } = req.body;
     if (!status) return res.status(400).json({ success: false, message: "Missing status." });
     try {
-        const sql = "UPDATE tasks SET status = ? WHERE id = ?";
-        await db.execute(sql, [status, parseInt(id, 10)]);
-        return res.status(200).json({ success: true, message: "Status synchronized!" });
+        const taskId = parseInt(id, 10);
+        
+        // 1. Thực thi cập nhật trạng thái mới
+        const sqlUpdate = "UPDATE tasks SET status = ? WHERE id = ?";
+        await db.execute(sqlUpdate, [status, taskId]);
+
+        // 2. 🤖 TỰ ĐỘNG GHI LOG KHI KÉO THẢ: Bắn một dòng lịch sử ngầm xuống bảng task_logs
+        const logText = `Completed Time`;
+        const sqlLog = "INSERT INTO task_logs (task_id, log_text) VALUES (?, ?)";
+        await db.execute(sqlLog, [taskId, logText]);
+
+        return res.status(200).json({ success: true, message: "Status synchronized and logged!" });
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
@@ -113,9 +122,17 @@ exports.deleteTask = async (req, res) => {
 exports.createTaskLog = async (req, res) => {
     try {
         const { taskId, logText } = req.body;
-        await db.execute("INSERT INTO task_logs (task_id, log_text) VALUES (?, ?)", [taskId, logText.trim()]);
-        return res.status(201).json({ success: true });
+        if (!logText || logText.trim() === '') {
+            return res.status(400).json({ message: "Content cannot be blank!" });
+        }
+
+        const sql = "INSERT INTO task_logs (task_id, log_text) VALUES (?, ?)";
+        await db.execute(sql, [taskId, logText.trim()]);
+
+        // ĐỒNG BỘ: Trả về success: true để Frontend biết đường load lại dòng thời gian
+        return res.status(201).json({ success: true, message: "Logged successfully!" });
     } catch (error) {
+        console.error("Error creating task log:", error);
         return res.status(500).json({ message: "Server error." });
     }
 };
