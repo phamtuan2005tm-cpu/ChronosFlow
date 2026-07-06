@@ -8,19 +8,20 @@ const session = require('express-session');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 2. IMPORT CÁC TUYẾN ĐƯỜNG ROUTE (Giữ nguyên - Đã chuẩn theo ảnh)
+// 2. IMPORT CÁC TUYẾN ĐƯỜNG ROUTE (Số ít đồng bộ 100%)
 const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
 const learningRoutes = require('./routes/learningRoutes'); 
 const financeRoutes = require('./routes/financeRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes'); 
+const settingRoutes = require('./routes/settingRoute'); // 🟢 Đã đồng bộ số ít
 
-
-// 3. CẤU HÌNH VIEW ENGINE (💡 ĐÃ SỬA: Bỏ chữ 'src/' vì app.js đã ở trong src)
+// 3. CẤU HÌNH VIEW ENGINE
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); 
 
-// 4. CẤU HÌNH MIDDLEWARE & THƯ MỤC TĨNH (💡 ĐÃ SỬA: Thêm '../' để nhảy ra ngoài tìm thư mục public)
+// 4. CẤU HÌNH MIDDLEWARE & THƯ MỤC TĨNH
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public'))); 
@@ -39,8 +40,10 @@ app.use(session({
 app.use('/', authRoutes); 
 app.use('/api', taskRoutes);
 app.use(scheduleRoutes); 
-app.use('/api/learning', learningRoutes); // Thông cổng API Learning Hub
+app.use('/api/learning', learningRoutes); 
 app.use('/api/finance', financeRoutes);
+app.use('/api', dashboardRoutes); 
+app.use('/api', settingRoutes); // 🟢 Đấu nối cổng local duy nhất sạch rác
 
 // 7. KÍCH HOẠT SERVER
 app.listen(PORT, () => {

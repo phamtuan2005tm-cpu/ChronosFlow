@@ -12,7 +12,9 @@
     <link rel="stylesheet" href="/css/homePageStyles.css">
 
     <style>
-        /* Hiệu ứng chuyển động tịnh tiến êm ái cho cả 2 vùng */
+        /* ==========================================================================
+       📱 1. LOGIC CO GIÃN SIDEBAR & HIỆU ỨNG TỊNH TIẾN (TRANSITION)
+       ========================================================================== */
         .sidebar {
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease !important;
             overflow-x: hidden !important;
@@ -22,36 +24,23 @@
             transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
 
-        /* 🔴 1. XỬ LÝ KHI SIDEBAR CO LẠI (COLLAPSED) */
+        /* Khi Sidebar bị co lại (Collapsed) */
         .sidebar.collapsed {
             width: 75px !important;
             padding-left: 8px !important;
             padding-right: 8px !important;
         }
 
-        /* Ép vùng nội dung chính tràn sang lấp khoảng trống trắng */
         .sidebar.collapsed~.main-content,
-        .sidebar.collapsed+.main-content,
         body:has(.sidebar.collapsed) .main-content {
             margin-left: 75px !important;
             padding-left: 20px !important;
         }
 
-        /* Ẩn chữ Menu, ẩn logo dài bằng ảnh */
         .sidebar.collapsed .menu-text,
         .sidebar.collapsed .brand-logo img,
         .sidebar.collapsed .btn-logout span>span {
             display: none !important;
-        }
-
-        /* Thay logo dài bằng icon đồng hồ cát nhỏ gọn nằm ngay tâm */
-        .sidebar.collapsed .brand-logo {
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 100% !important;
-            margin: 0 0 10px 0 !important;
-            min-height: 40px !important;
         }
 
         .sidebar.collapsed .brand-logo::before {
@@ -60,37 +49,11 @@
             display: block;
         }
 
-        /* Sắp xếp nút ba gạch nằm dọc ngay dưới icon đồng hồ cát */
         .sidebar.collapsed .sidebar-header-area {
             flex-direction: column-reverse !important;
             gap: 12px !important;
-            justify-content: center !important;
-            width: 100% !important;
         }
 
-        .sidebar.collapsed .sidebar-header-area button {
-            width: 100% !important;
-            justify-content: center !important;
-            padding: 5px 0 !important;
-            display: flex !important;
-        }
-
-        /* 🔴 2. BẢO VỆ ICON: ÉP CÁC ICON MENU VÀO TRUNG TÂM HÀNG DỌC */
-        .sidebar.collapsed .nav-menu {
-            padding: 0 !important;
-            margin: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-        }
-
-        .sidebar.collapsed .nav-menu .nav-item {
-            width: 100% !important;
-            display: flex !important;
-            justify-content: center !important;
-        }
-
-        /* Khống chế thẻ 'a' thành một khối hộp vuông cân đối để giữ icon */
         .sidebar.collapsed .nav-menu .nav-item a {
             display: flex !important;
             justify-content: center !important;
@@ -98,40 +61,241 @@
             width: 50px !important;
             height: 45px !important;
             padding: 0 !important;
-            margin: 4px 0 !important;
             border-radius: 8px !important;
         }
 
-        /* Ép thẻ 'i' hiển thị độc lập, to rõ ràng */
-        .sidebar.collapsed .nav-menu .nav-item a i {
-            margin: 0 !important;
-            font-size: 20px !important;
-            display: inline-block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-        }
-
-        /* 🔴 3. THU GỌN NÚT SIGN OUT DƯỚI ĐÁY */
         .sidebar.collapsed .btn-logout {
-            padding: 12px 0 !important;
             justify-content: center !important;
-            display: flex !important;
-            width: 100% !important;
+            display: flex;
         }
 
-        .sidebar.collapsed .btn-logout span {
-            margin: 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            width: 100% !important;
+
+        /* ==========================================================================
+       🚨 2. HỆ THỐNG BIẾN MÀU CENTRAL CENTRAL CONTROL UNIT
+       ========================================================================== */
+
+        /* CHẾ ĐỘ SÁNG MẶC ĐỊNH (LIGHT MODE) */
+        :root,
+        body {
+            --bg-main: #f8fafc;
+            /* Nền chính xám nhạt nhẹ nhàng */
+            --bg-card: #ffffff;
+            /* Nền các khối card trắng tinh */
+            --text-main: #1e293b;
+            /* Chữ chính màu xanh đen đậm */
+            --text-muted: #64748b;
+            /* Chữ phụ màu xám */
+            --bg-input: #ffffff;
+            /* Nền các ô input, select */
+            --border-color: #e2e8f0;
+            /* Viền kẻ nhạt */
         }
 
-        .sidebar.collapsed .btn-logout i {
-            margin: 0 !important;
-            font-size: 20px !important;
-            display: inline-block !important;
+        /* CHẾ ĐỘ TỐI KHI KÍCH HOẠT (DARK MODE) */
+        body.dark-mode-active {
+            --bg-main: #0f172a;
+            /* Nền tối sâu thẳm (slate-900) */
+            --bg-card: #1e293b;
+            /* Nền các khối card tối vừa (slate-800) */
+            --text-main: #f8fafc;
+            /* Chữ trắng sáng dễ đọc */
+            --text-muted: #94a3b8;
+            /* Chữ phụ xám sáng */
+            --bg-input: #334155;
+            /* Nền input tối (slate-700) */
+            --border-color: #334155;
+            /* Viền kẻ tối */
+        }
+
+
+        /* ==========================================================================
+       🧱 3. ÉP TOÀN BỘ CẤU TRÚC CÁC TRANG CON ĂN THEO BIẾN MÀU HỆ THỐNG
+       ========================================================================== */
+
+        body {
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Ép vùng chứa nội dung của TẤT CẢ các phân hệ Tab con */
+        .main-content,
+        .tab-content,
+        .dashboard-wrapper,
+        .task-management-wrapper {
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
+        }
+
+        /* ĐÈ CHÍNH XÁC THEO TỪNG THỂ STYLE TRONG MÃ THÔ CỦA TUẤN */
+        body.dark-mode-active div[style*="background: #fff"],
+        body.dark-mode-active div[style*="background: white"],
+        body.dark-mode-active div[style*="background-color: #fff"],
+        body.dark-mode-active div[style*="background-color: white"],
+        body.dark-mode-active .task-form-card,
+        body.dark-mode-active .category-filters,
+        body.dark-mode-active .calendar-main-board,
+        body.dark-mode-active #debt-detail-modal>div,
+        body.dark-mode-active #schedule-detail-modal>div,
+        body.dark-mode-active #task-detail-modal>div,
+        body.dark-mode-active #text-input-modal>div,
+        body.dark-mode-active #pending-bills-zone,
+        body.dark-mode-active .kanban-column {
+            background-color: var(--bg-card) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* 📅 1. Tab Lịch trình (Schedules - Sửa dứt điểm ô lưới tháng) */
+        body.dark-mode-active #schedule-creation-form button[style*="background: #fff"],
+        body.dark-mode-active .btn-day-checkbox,
+        body.dark-mode-active .calendar-top-bar,
+        body.dark-mode-active .calendar-top-bar button,
+        body.dark-mode-active .fc-view-harness,
+        body.dark-mode-active .fc-view-harness *,
+        /* Ép toàn bộ các thẻ con bên trong FullCalendar */
+        body.dark-mode-active .fc-daygrid-day,
+        body.dark-mode-active .fc-daygrid-bg-nav,
+        body.dark-mode-active .fc-scrollgrid {
+            background-color: var(--bg-card) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        body.dark-mode-active .fc-theme-standard td,
+        body.dark-mode-active .fc-theme-standard th,
+        body.dark-mode-active #schedule-board-content div {
+            border-color: var(--border-color) !important;
+        }
+
+        /* 📁 2. Tab Công việc (Tasks - Sửa dứt điểm tag mức độ Priority) */
+        body.dark-mode-active select#proj-priority,
+        body.dark-mode-active select#task-priority {
+            background-color: var(--bg-input) !important;
+            color: var(--text-main) !important;
+        }
+
+        body.dark-mode-active .task-inline-form,
+        body.dark-mode-active section[style*="background: #f8fafc"] {
+            background-color: var(--bg-main) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* Sửa ô Badge Priority tròn nhỏ (Low/Medium/High) */
+        body.dark-mode-active span[style*="background: #fff"],
+        body.dark-mode-active span[style*="background: white"] {
+            background-color: var(--bg-input) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        /* 📚 3. Tab Học tập (Learning Hub - Sửa dứt điểm ô chứa tên môn học) */
+        body.dark-mode-active #subjects-list-group div,
+        body.dark-mode-active div[style*="background: #fff"] input,
+        body.dark-mode-active .learning-panels-container div {
+            background-color: var(--bg-card) !important;
+            color: var(--text-main) !important;
+        }
+
+        /* 💰 4. Tab Tài chính (Finance Flow - Sửa dứt điểm vệt trắng thanh Timeline) */
+        body.dark-mode-active div[style*="background: #f8fafc"],
+        body.dark-mode-active div[style*="background: var(--bg-main)"],
+        body.dark-mode-active thead[style*="background: #f1f5f9"],
+        body.dark-mode-active tr[style*="background: #f8fafc"] {
+            background-color: var(--bg-main) !important;
+        }
+
+        body.dark-mode-active select#tx-type,
+        body.dark-mode-active select#modal-debt-mode {
+            background-color: var(--bg-input) !important;
+            color: var(--text-main) !important;
+        }
+
+        /* ==========================================================================
+       🧱 BỔ SUNG SỬA DỨT ĐIỂM Ô MÔN HỌC ĐỘNG VÀ TIÊU ĐỀ LỊCH TRÌNH
+       ========================================================================== */
+
+        /* 🚨 Sửa ô môn học bên tab Learning (Đè sâu vào các phần tử tạo động từ JS) */
+        body.dark-mode-active #subjects-list-group div,
+        body.dark-mode-active #subjects-list-group *,
+        body.dark-mode-active .btn-sub-tab:not(.active) {
+            background-color: var(--bg-card) !important;
+            background: var(--bg-card) !important;
+            /* Triệt tiêu thuộc tính background gán cứng */
+            color: var(--text-main) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* 🚨 Sửa chữ tiêu đề Tháng/Năm (Tháng 7, 2026) bên tab Schedules */
+        body.dark-mode-active .fc-toolbar-title,
+        body.dark-mode-active #calendar-view-title {
+            color: var(--text-main) !important;
+        }
+
+        /* Đảm bảo các nút điều hướng tuần/tháng/ngày ăn theo màu input tối */
+        body.dark-mode-active .fc-button,
+        body.dark-mode-active .view-switcher button:not(.active) {
+            background-color: var(--bg-input) !important;
+            color: var(--text-main) !important;
+            border-color: var(--border-color) !important;
+            background: var(--bg-input) !important;
+        }
+
+        /* ==========================================================================
+       🛡️ BỘ CHỌN TỐI THƯỢNG DIỆT TẬN GỐC VẾT TRẮNG FULLCALENDAR (SCHEDULES)
+       ========================================================================== */
+
+        /* Ép toàn bộ khung lưới, khung cuộn và các ô ngày của FullCalendar về màu nền tối */
+        body.dark-mode-active .fc,
+        body.dark-mode-active .fc-theme-standard td,
+        body.dark-mode-active .fc-theme-standard th,
+        body.dark-mode-active .fc-scrollgrid,
+        body.dark-mode-active .fc-scroller,
+        body.dark-mode-active .fc-daygrid-day-frame,
+        body.dark-mode-active .fc-daygrid-day-top,
+        body.dark-mode-active .fc-daygrid-day {
+            background-color: var(--bg-card) !important;
+            background: var(--bg-card) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* Đè màu nền cho các ngày không thuộc tháng hiện tại (ngày mờ) */
+        body.dark-mode-active .fc-day-other {
+            background-color: var(--bg-main) !important;
+            opacity: 0.6;
+        }
+
+        /* Ép số ngày (1, 2, 3...) và chữ hiển thị trong lịch sang màu trắng sáng */
+        body.dark-mode-active .fc .fc-daygrid-day-number,
+        body.dark-mode-active .fc .fc-col-header-cell-cushion {
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
+        }
+
+        /* Sửa ô hiển thị Tháng/Năm ở thanh bar phía trên */
+        body.dark-mode-active .fc-toolbar-title,
+        body.dark-mode-active #calendar-view-title {
+            color: var(--text-main) !important;
+        }
+
+        /* Định hình lại các nút bấm điều hướng (Today, Day, Week, Month) sang màu input tối */
+        body.dark-mode-active .fc-button,
+        body.dark-mode-active .fc-button-primary {
+            background-color: var(--bg-input) !important;
+            background: var(--bg-input) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+
+        /* Khi rê chuột hoặc nút đang active thì đổi màu đậm hơn chút cho đẹp */
+        body.dark-mode-active .fc-button-active,
+        body.dark-mode-active .fc-button:hover {
+            background-color: var(--bg-main) !important;
+            background: var(--bg-main) !important;
+            border-color: #2563eb !important;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -150,27 +314,20 @@
                         class="menu-text">Menu</span></a>
             </button>
             <ul class="nav-menu">
-                <li class="nav-item active" data-tab="dashboard">
-                    <a href="#"><i class="fa-solid fa-house"></i><span class="menu-text">Dashboard</span></a>
-                </li>
-                <li class="nav-item" data-tab="schedules">
-                    <a href="#"><i class="fa-solid fa-calendar"></i><span class="menu-text">Schedules</span></a>
-                </li>
-                <li class="nav-item" data-tab="tasks">
-                    <a href="#"><i class="fa-solid fa-list-check"></i><span class="menu-text">Tasks</span></a>
-                </li>
-                <li class="nav-item" data-tab="learning">
-                    <a href="#"><i class="fa-solid fa-book"></i><span class="menu-text">Learning</span></a>
-                </li>
-                <li class="nav-item" data-tab="finance">
-                    <a href="#"><i class="fa-solid fa-money-bill-wave"></i><span class="menu-text">Finance</span></a>
-                </li>
-                <li class="nav-item" data-tab="settings">
-                    <a href="#"><i class="fa-solid fa-gear"></i><span class="menu-text">Settings</span></a>
-                </li>
+                <li class="nav-item active" data-tab="dashboard"><a href="#"><i class="fa-solid fa-house"></i><span
+                            class="menu-text">Dashboard</span></a></li>
+                <li class="nav-item" data-tab="schedules"><a href="#"><i class="fa-solid fa-calendar"></i><span
+                            class="menu-text">Schedules</span></a></li>
+                <li class="nav-item" data-tab="tasks"><a href="#"><i class="fa-solid fa-list-check"></i><span
+                            class="menu-text">Tasks</span></a></li>
+                <li class="nav-item" data-tab="learning"><a href="#"><i class="fa-solid fa-book"></i><span
+                            class="menu-text">Learning</span></a></li>
+                <li class="nav-item" data-tab="finance"><a href="#"><i class="fa-solid fa-money-bill-wave"></i><span
+                            class="menu-text">Finance</span></a></li>
+                <li class="nav-item" data-tab="settings"><a href="#"><i class="fa-solid fa-gear"></i><span
+                            class="menu-text">Settings</span></a></li>
             </ul>
         </div>
-
         <a href="/login" class="btn-logout">
             <span><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign Out</span></span>
         </a>
@@ -180,146 +337,46 @@
         <div id="dashboard" class="tab-content active">
             <%- include('partials/dashboardSection') %>
         </div>
-
-        <div id="schedules" class="tab-content">
-            <%- include('partials/scheduleSection') %>
-        </div>
-
-        <div id="tasks" class="tab-content">
-            <%- include('partials/tasksSection') %>
-        </div>
-
-        <div id="learning" class="tab-content">
-            <%- include('partials/learningSection') %>
-        </div>
-
-        <div id="finance" class="tab-content">
-            <%- include('partials/financeSection') %>
-        </div>
-
-        <div id="settings" class="tab-content">
-            <div class="header-content">
-                <h1 class="welcome-title">Settings</h1>
-            </div>
-            <div class="dashboard-body">
-                <div class="placeholder-icon">⚙️</div>
-                <h3 class="body-title">Settings Feature Coming Soon</h3>
-            </div>
-        </div>
+        <div id="schedules" class="tab-content"><%- include('partials/scheduleSection') %></div>
+        <div id="tasks" class="tab-content"><%- include('partials/tasksSection') %></div>
+        <div id="learning" class="tab-content"><%- include('partials/learningSection') %></div>
+        <div id="finance" class="tab-content"><%- include('partials/financeSection') %></div>
+        <div id="settings" class="tab-content"><%- include('partials/settingSection') %></div>
     </main>
 
     <script>
-        // 💡 1. HÀM ĐÓNG MỞ SIDEBAR THANH MENU
-        function toggleSidebar() {
-            const sidebar = document.getElementById('main-sidebar');
-            const toggleIcon = document.getElementById('sidebar-toggle-icon');
-            if (!sidebar) return;
-
-            sidebar.classList.toggle('collapsed');
-
-            if (sidebar.classList.contains('collapsed')) {
-                toggleIcon.className = 'fa-solid fa-angles-right';
-            } else {
-                toggleIcon.className = 'fa-bars';
-            }
-        }
-
-        // 💡 2. FETCH SỐ LIỆU THỐNG KÊ DASHBOARD QUÉT TỪ BACKEND
-        function fetchDashboardStats() {
-            fetch('/api/dashboard-stats')
-                .then(response => response.json())
-                .then(data => {
-                    const totalProjEl = document.getElementById('stat-total-projects');
-                    const activeTaskEl = document.getElementById('stat-active-tasks');
-                    if (totalProjEl) totalProjEl.innerText = data.totalProjects || 0;
-                    if (activeTaskEl) activeTaskEl.innerText = data.activeTasks || 0;
-                })
-                .catch(err => console.error('Lỗi fetch số liệu cơ học:', err));
-        }
-
-        // 💡 3. LIVE DIGITAL CLOCK ENGINE WITH FULL ENGLISH TIMEFORMAT
-        function startLiveClock() {
-            const timeEl = document.getElementById('live-time');
-            const dateEl = document.getElementById('live-date');
-
-            if (!timeEl || !dateEl) return;
-
-            setInterval(() => {
-                const now = new Date();
-                timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: false });
-                const options = { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' };
-                dateEl.innerText = `⏳ ${now.toLocaleDateString('en-US', options)}`;
-            }, 1000);
-        }
-
-        // Kích hoạt nạp đồng hồ khi mở trang chủ
-        document.addEventListener("DOMContentLoaded", () => {
-            startLiveClock();
-            fetchDashboardStats();
-        });
-
-        // 💡 4. ĐIỀU HƯỚNG CHUYỂN TAB SIDEBAR (ĐÃ LOẠI BỎ TOÀN BỘ CÁC HÀM CLASH GÂY LỖI 404)
-        document.querySelectorAll('.nav-menu .nav-item').forEach(item => {
-            item.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                const currentActiveNav = document.querySelector('.nav-menu .nav-item.active');
-                if (currentActiveNav) {
-                    currentActiveNav.classList.remove('active');
-                }
-                item.classList.add('active');
-
-                const targetTabId = item.getAttribute('data-tab');
-
-                const currentActiveTab = document.querySelector('.tab-content.active');
-                if (currentActiveTab) {
-                    currentActiveTab.classList.remove('active');
-                }
-
-                const targetTab = document.getElementById(targetTabId);
-                if (targetTab) {
-                    targetTab.classList.add('active');
-                }
-
-                // Chuyển giao toàn quyền nạp dữ liệu cho file /js/tasks.js xử lý
-                if (targetTabId === 'dashboard') {
-                    fetchDashboardStats();
-                } else if (targetTabId === 'tasks') {
-                    if (typeof window.loadActiveProjects === 'function') {
-                        window.loadActiveProjects();
-                    }
-                }
-            });
-        });
-        // 🔄 BIẾN TOÀN CỤC LƯU TRỮ ĐỐI TƯỢNG BIỂU ĐỒ ĐỂ TRÁNH LỖI LẶP KHỞI TẠO (CANVAS TRÙNG)
+        // 🔄 1. BIẾN TOÀN CỤC KHỞI TẠO ĐẦU TIÊN
         let lineChartInstance = null;
         let donutChartInstance = null;
 
-        // 📊 FETCH TOÀN BỘ SỐ LIỆU VÀ ĐỔ VÀO BIỂU ĐỒ / MINI CARDS / LỊCH TRÌNH
+        // 📊 2. ĐỊNH NGHĨA HÀM ENGINE TRƯỚC ĐỂ TRÌNH DUYỆT KHÔNG BÁO "NOT DEFINED"
         function fetchDashboardStats() {
             fetch('/api/dashboard-stats')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error("API Network Response Error");
+                    return response.json();
+                })
                 .then(data => {
-                    // 1. Nạp dữ liệu lên 4 tấm Mini Cards trên đỉnh
+                    // Đổ số liệu 4 Mini Cards đỉnh
                     if (document.getElementById('stat-finance-balance')) document.getElementById('stat-finance-balance').innerText = (data.financeBalance || 0).toLocaleString('vi-VN') + " VND";
-                    if (document.getElementById('stat-active-tasks')) document.getElementById('stat-active-tasks').innerText = (data.activeTasks || 0) + " Task";
-                    if (document.getElementById('stat-total-projects')) document.getElementById('stat-total-projects').innerText = (data.totalProjects || 0) + " Project";
-                    if (document.getElementById('stat-learning-cards')) document.getElementById('stat-learning-cards').innerText = (data.learningCards || 0) + " Thẻ";
+                    if (document.getElementById('stat-active-tasks')) document.getElementById('stat-active-tasks').innerText = (data.activeTasks || 0) + " Tasks";
+                    if (document.getElementById('stat-total-projects')) document.getElementById('stat-total-projects').innerText = (data.totalProjects || 0) + " Projects";
+                    if (document.getElementById('stat-learning-cards')) document.getElementById('stat-learning-cards').innerText = (data.learningCoursesCount || 0) + " Courses";
 
-                    // 2. 📈 KHỞI TẠO BIỂU ĐỒ SÓNG (HỌC TẬP TRONG TUẦN)
+                    // Khởi tạo đồ thị sóng (Line Chart)
                     const ctxLine = document.getElementById('dashboardLineChart');
                     if (ctxLine) {
-                        if (lineChartInstance) lineChartInstance.destroy(); // Xóa biểu đồ cũ phòng bộ nhớ đệm đè
+                        if (lineChartInstance) lineChartInstance.destroy();
                         lineChartInstance = new Chart(ctxLine, {
                             type: 'line',
                             data: {
                                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
                                 datasets: [{
-                                    label: 'Giờ học tích lũy',
-                                    data: data.learningHoursDataset || [0, 0, 0, 0, 0, 0, 0], // Mảng 7 ngày lấy từ Backend
+                                    label: 'Accumulated Study Hours',
+                                    data: data.learningHoursDataset || [0, 0, 0, 0, 0, 0, 0],
                                     borderColor: '#2563eb',
                                     backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                                    tension: 0.4, // Hiệu ứng sóng uốn lượn êm ái giống ảnh
+                                    tension: 0.4,
                                     fill: true
                                 }]
                             },
@@ -327,7 +384,7 @@
                         });
                     }
 
-                    // 3. 🍩 KHỞI TẠO BIỂU ĐỒ TRÒN (PHÂN BỔ TASK THEO ĐỘ ƯU TIÊN)
+                    // Khởi tạo đồ thị tròn (Donut Chart)
                     const ctxDonut = document.getElementById('dashboardDonutChart');
                     if (ctxDonut) {
                         if (donutChartInstance) donutChartInstance.destroy();
@@ -336,7 +393,7 @@
                             data: {
                                 labels: ['High', 'Medium', 'Low'],
                                 datasets: [{
-                                    data: data.taskPriorityDataset || [0, 0, 0], // Mảng [High, Medium, Low]
+                                    data: data.taskPriorityDataset || [0, 0, 0],
                                     backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6'],
                                     borderWidth: 2
                                 }]
@@ -345,18 +402,18 @@
                         });
                     }
 
-                    // 4. 📅 BƠM DỮ LIỆU LỊCH TRÌNH NGÀY HÔM NAY VÀO CỘT PHẢI
-                    const scheduleContainer = document.getElementById('dashboard-today-schedule-list');
-                    if (scheduleContainer) {
-                        scheduleContainer.innerHTML = '';
+                    // Bơm dữ liệu lịch trình thật vào hộp Agenda
+                    const container = document.getElementById('dashboard-today-schedule-list');
+                    if (container) {
+                        container.innerHTML = '';
                         const todaySchedules = data.todaySchedules || [];
 
                         if (todaySchedules.length === 0) {
-                            scheduleContainer.innerHTML = `<p style="font-size: 12px; color: #94a3b8; text-align: center; margin: auto 0;">🎯 Hôm nay thảnh thơi, không có lịch trình nào!</p>`;
+                            container.innerHTML = `<p style="font-size: 12px; color: #94a3b8; text-align: center; margin: auto 0; padding: 20px 0;">🎯 Today is free! No scheduled events.</p>`;
                         } else {
                             todaySchedules.forEach(item => {
-                                scheduleContainer.insertAdjacentHTML('beforeend', `
-                                    <div style="background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 4px solid #2563eb; display: flex; align-items: center; gap: 10px; font-size: 12px;">
+                                container.insertAdjacentHTML('beforeend', `
+                                    <div style="background: #f8fafc; padding: 10px; border-radius: 8px; border-left: 4px solid #2563eb; display: flex; align-items: center; gap: 10px; font-size: 12px; margin-bottom: 8px;">
                                         <strong style="color: #475569; min-width: 45px;">⏱ ${item.start_time || '00:00'}</strong>
                                         <span style="color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.title}</span>
                                     </div>
@@ -365,8 +422,179 @@
                         }
                     }
                 })
-                .catch(err => console.error('Lỗi nạp số liệu thống kê tổng hợp:', err));
+                .catch(err => console.error('Lỗi API Core Render:', err));
         }
+
+        // ⚙️ 3. CÁC HÀM TIỆN ÍCH SIDEBAR VÀ ĐỒNG HỒ
+        function toggleSidebar() {
+            const sidebar = document.getElementById('main-sidebar');
+            const toggleIcon = document.getElementById('sidebar-toggle-icon');
+            if (!sidebar) return;
+            sidebar.classList.toggle('collapsed');
+            toggleIcon.className = sidebar.classList.contains('collapsed') ? 'fa-solid fa-angles-right' : 'fa-bars';
+        }
+
+        function startLiveClock() {
+            const timeEl = document.getElementById('live-time');
+            const dateEl = document.getElementById('live-date');
+            if (!timeEl || !dateEl) return;
+            setInterval(() => {
+                const now = new Date();
+                timeEl.innerText = now.toLocaleTimeString('en-US', { hour12: false });
+                dateEl.innerText = `⏳ ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' })}`;
+            }, 1000);
+        }
+
+        // 🔔 4. LẮNG NGHE SỰ KIỆN KHỞI CHẠY (BỌC THÉP TRÁNH CRASH)
+        document.addEventListener("DOMContentLoaded", () => {
+            startLiveClock();
+            // Đảm bảo hàm đã tồn tại trong bộ nhớ rồi mới kích hoạt gọi
+            if (typeof fetchDashboardStats === 'function') {
+                fetchDashboardStats();
+            }
+        });
+
+        // 💡 5. LOGIC CHUYỂN TÁP ĐIỀU HƯỚNG SIDEBAR
+        document.querySelectorAll('.nav-menu .nav-item').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector('.nav-menu .nav-item.active')?.classList.remove('active');
+                item.classList.add('active');
+
+                const targetTabId = item.getAttribute('data-tab');
+                document.querySelector('.tab-content.active')?.classList.remove('active');
+                document.getElementById(targetTabId)?.classList.add('active');
+
+                if (targetTabId === 'dashboard' && typeof fetchDashboardStats === 'function') {
+                    fetchDashboardStats();
+                }
+            });
+        });
+        // Thêm vào sự kiện DOMContentLoaded để tự động tải cấu hình cũ lên
+        document.addEventListener("DOMContentLoaded", () => {
+            startLiveClock();
+            if (typeof fetchDashboardStats === 'function') fetchDashboardStats();
+
+            // Khởi tạo tải cài đặt của người dùng
+            loadUserSettings();
+
+            // Logic ẩn/hiện tần suất gửi email khi click bật/tắt nhận mail
+            const emailToggle = document.getElementById('settings-email-toggle');
+            const freqGroup = document.getElementById('email-frequency-group');
+            if (emailToggle && freqGroup) {
+                emailToggle.addEventListener('change', () => {
+                    freqGroup.style.opacity = emailToggle.checked ? "1" : "0.5";
+                    freqGroup.style.pointerEvents = emailToggle.checked ? "auto" : "none";
+                });
+            }
+
+            // Xử lý sự kiện lưu Form cài đặt
+            const settingsForm = document.getElementById('settings-form');
+            if (settingsForm) {
+                settingsForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveUserSettings();
+                });
+            }
+        });
+
+        // Hàm lấy dữ liệu cài đặt từ API đổ vào Form
+        function loadUserSettings() {
+            fetch('/api/user-settings')
+                .then(res => res.json())
+                .then(config => {
+                    if (config.username) document.getElementById('settings-username').value = config.username;
+
+                    // Cập nhật Dark Mode
+                    const darkModeCheck = document.getElementById('settings-darkmode');
+                    if (darkModeCheck) {
+                        darkModeCheck.checked = config.darkMode || false;
+                        if (config.darkMode) document.body.classList.add('dark-mode-active');
+                    }
+
+                    // Cập nhật Trạng thái Email
+                    const emailToggle = document.getElementById('settings-email-toggle');
+                    if (emailToggle) {
+                        emailToggle.checked = config.allowEmail || false;
+                        const freqGroup = document.getElementById('email-frequency-group');
+                        if (freqGroup) {
+                            freqGroup.style.opacity = config.allowEmail ? "1" : "0.5";
+                            freqGroup.style.pointerEvents = config.allowEmail ? "auto" : "none";
+                        }
+                    }
+
+                    if (config.emailFrequency) document.getElementById('settings-email-frequency').value = config.emailFrequency;
+                })
+                .catch(err => console.error("Không thể tải cài đặt:", err));
+        }
+
+        // Hàm gửi dữ liệu cài đặt mới lên API Backend để lưu
+        function saveUserSettings() {
+            const payload = {
+                username: document.getElementById('settings-username').value,
+                darkMode: document.getElementById('settings-darkmode').checked,
+                allowEmail: document.getElementById('settings-email-toggle').checked,
+                emailFrequency: document.getElementById('settings-email-frequency').value
+            };
+
+            fetch('/api/user-settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        alert("🎉 Settings saved successfully!");
+                        // Đổi giao diện Dark Mode lập tức mà không cần F5 trang
+                        if (payload.darkMode) {
+                            document.body.classList.add('dark-mode-active');
+                        } else {
+                            document.body.classList.remove('dark-mode-active');
+                        }
+                    }
+                })
+                .catch(err => alert("🚨 Failed to save settings."));
+        }
+        // Thay thế đoạn lắng nghe sự kiện Settings cũ trong DomContentLoaded thành:
+        document.addEventListener("DOMContentLoaded", () => {
+            startLiveClock();
+            if (typeof fetchDashboardStats === 'function') fetchDashboardStats();
+
+            // Tải cấu hình cài đặt từ API
+            loadUserSettings();
+
+            // 🟢 BỌC AN TOÀN 1: Logic gạt nút đổi màu Dark Mode lập tức real-time
+            const darkModeCheck = document.getElementById('settings-darkmode');
+            if (darkModeCheck) {
+                darkModeCheck.addEventListener('change', () => {
+                    if (darkModeCheck.checked) {
+                        document.body.classList.add('dark-mode-active');
+                    } else {
+                        document.body.classList.remove('dark-mode-active');
+                    }
+                });
+            }
+
+            // 🟢 BỌC AN TOÀN 2: Logic ẩn/hiện độ mờ tần suất gửi email
+            const emailToggle = document.getElementById('settings-email-toggle');
+            const freqGroup = document.getElementById('email-frequency-group');
+            if (emailToggle && freqGroup) {
+                emailToggle.addEventListener('change', () => {
+                    freqGroup.style.opacity = emailToggle.checked ? "1" : "0.5";
+                    freqGroup.style.pointerEvents = emailToggle.checked ? "auto" : "none";
+                });
+            }
+
+            // 🟢 BỌC AN TOÀN 3: Lắng nghe sự kiện submit form để lưu lại
+            const settingsForm = document.getElementById('settings-form');
+            if (settingsForm) {
+                settingsForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    saveUserSettings();
+                });
+            }
+        });
     </script>
 </body>
 
