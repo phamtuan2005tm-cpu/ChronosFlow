@@ -316,10 +316,29 @@ function savePersonalTransactionApi() {
     const noteInput = document.getElementById('tx-note');
     if (!amountInput || !amountInput.value.trim()) return alert('Nhập số tiền trước!');
 
+    // 🟢 XỬ LÝ LỌC CHỮ K BIẾN THÀNH SỐ CHUẨN ĐỂ TRÁNH LỖI 400 BAD REQUEST
+    let rawAmount = 0;
+    let clean = amountInput.value.toString().toLowerCase().trim();
+    let multiplier = 1;
+    if (clean.endsWith('k')) {
+        multiplier = 1000;
+        clean = clean.slice(0, -1).trim();
+    }
+    const parsedValue = parseFloat(clean);
+    rawAmount = isNaN(parsedValue) ? 0 : Math.round(parsedValue * multiplier);
+
+    if (rawAmount <= 0) {
+        return alert('Số tiền nhập vào không hợp lệ Tuấn ơi!');
+    }
+
     fetch('/api/finance/transaction', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: amountInput.value.trim(), type: typeSelect.value, note: noteInput.value.trim() })
+        body: JSON.stringify({ 
+            amount: rawAmount, // 🟢 Gửi số thuần (ví dụ: 456000) thay vì chuỗi "456k"
+            type: typeSelect.value, 
+            note: noteInput.value.trim() 
+        })
     })
     .then(res => res.json())
     .then(data => {
@@ -327,8 +346,11 @@ function savePersonalTransactionApi() {
             amountInput.value = ''; noteInput.value = '';
             updateFinanceDashboard();
             updateMonthlyBudgetProgress();
+        } else {
+            alert('Lỗi: ' + data.message);
         }
-    });
+    })
+    .catch(err => alert('Lỗi hệ thống mạng: ' + err.message));
 }
 
 // 🎯 VÁ LỖI LOGIC: BỔ SUNG CỐT LÕI HÀM API XÓA LỊCH SỬ GIAO DỊCH
