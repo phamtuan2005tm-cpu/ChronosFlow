@@ -784,6 +784,88 @@
                 document.querySelectorAll('#live-date').forEach(el => el.innerText = dateString);
             }, 1000);
         }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 1. Gọi API bốc dữ liệu tổng hợp từ Server của Tuấn
+            fetch('/api/dashboard/stats')
+                .then(res => {
+                    if (!res.ok) throw new Error("Chưa đăng nhập hoặc phiên làm việc hết hạn");
+                    return res.json();
+                })
+                .then(data => {
+                    // Cập nhật các thẻ đếm bằng dữ liệu thật (Nếu có thẻ nào trùng tên nó tự nạp luôn)
+                    if (document.getElementById('stat-finance-balance')) document.getElementById('stat-finance-balance').innerText = (data.financeBalance || 0).toLocaleString() + " VND";
+                    if (document.getElementById('stat-active-tasks')) document.getElementById('stat-active-tasks').innerText = (data.activeTasks || 0) + " Tasks";
+                    if (document.getElementById('stat-total-projects')) document.getElementById('stat-total-projects').innerText = (data.totalProjects || 0) + " Projects";
+                    if (document.getElementById('stat-learning-cards')) document.getElementById('stat-learning-cards').innerText = (data.learningCoursesCount || 0) + " Courses";
+
+                    // ==========================================
+                    // 🍩 BIỂU ĐỒ 1: TASK DISTRIBUTION BY PRIORITY
+                    // ==========================================
+                    const donutCanvas = document.getElementById('dashboardDonutChart');
+                    if (donutCanvas) {
+                        const donutCtx = donutCanvas.getContext('2d');
+                        const priorityDataset = data.taskPriorityDataset || [0, 0, 0];
+
+                        new Chart(donutCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['High', 'Medium', 'Low'],
+                                datasets: [{
+                                    data: priorityDataset,
+                                    backgroundColor: ['#ef4444', '#f59e0b', '#3b82f6'],
+                                    borderWidth: 2,
+                                    borderColor: '#ffffff'
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } }, // Ẩn legend gốc vì Tuấn đã có CSS custom legend bên trên
+                                cutout: '70%'
+                            }
+                        });
+                    }
+
+                    // ==========================================
+                    // 📊 BIỂU ĐỒ 2: STUDY ANALYTICS (WEEKLY LINE CHART)
+                    // ==========================================
+                    const lineCanvas = document.getElementById('dashboardLineChart');
+                    if (lineCanvas) {
+                        const lineCtx = lineCanvas.getContext('2d');
+                        const studyHoursDataset = data.learningHoursDataset || [0, 0, 0, 0, 0, 0, 0];
+
+                        new Chart(lineCtx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                                datasets: [{
+                                    label: 'Accumulated Study Hours',
+                                    data: studyHoursDataset,
+                                    borderColor: '#2563eb',
+                                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                                    borderWidth: 2,
+                                    tension: 0.3, // Tạo độ cong mềm mại cho sóng đồ thị
+                                    fill: true
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    y: { beginAtZero: true }
+                                }
+                            }
+                        });
+                    }
+                })
+                .catch(err => console.error("❌ Lỗi nạp đồ thị tại homepage.ejs:", err));
+        });
     </script>
 </body>
 
