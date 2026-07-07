@@ -23,7 +23,7 @@ const { initNotificationJobs } = require('./jobs/notificationJob');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); 
 
-// 4. CẤU HÌNH MIDDLEWARE & THƯ MỤC TĨNH (Sử dụng đường dẫn an toàn cho Render)
+// 4. CẤU HÌNH MIDDLEWARE & THƯ MỤC TĨNH
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public'))); 
@@ -47,7 +47,12 @@ app.use('/api/finance', financeRoutes);
 app.use('/api', dashboardRoutes); 
 app.use('/api', settingRoutes); 
 
-// 7. KÍCH HOẠT SERVER HOÀN CHỈNH (Gom Cron Job và log kiểm tra vào listen)
+// 🟢 ĐIỀU HƯỚNG GỐC CHUẨN (Trả lại dòng code này của Tuấn để bẻ khóa lỗi Cannot GET)
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
+
+// 7. KÍCH HOẠT SERVER HOÀN CHỈNH
 app.listen(PORT, () => {
     console.log(`🚀 ChronosFlow Server chạy chuẩn MVC tại cổng: ${PORT}`);
     console.log(`📡 DATABASE HOST HIỆN TẠI ĐANG CHẠY: [${process.env.DB_HOST}]`);
