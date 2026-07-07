@@ -4,11 +4,12 @@ const db = require('../config/database');
 // 🟢 1. Logic lấy toàn bộ lịch trình từ MySQL (BẮT BUỘC PHẢI THÊM end_time VÀ series_id)
 exports.getAllSchedules = async (req, res) => {
     try {
+        // 🟢 ĐÃ SỬA: Đổi toàn bộ nháy kép " thành nháy đơn ' cho các chuỗi định dạng format
         const sql = `
             SELECT id, title, 
-            DATE_FORMAT(start_time, "%Y-%m-%d") as date, 
-            TIME_FORMAT(start_time, "%H:%i") as startTime, 
-            TIME_FORMAT(end_time, "%H:%i") as endTime, 
+            DATE_FORMAT(start_time, '%Y-%m-%d') as date, 
+            TIME_FORMAT(start_time, '%H:%i') as startTime, 
+            TIME_FORMAT(end_time, '%H:%i') as endTime, 
             color, type, series_id
             FROM schedules
         `;
