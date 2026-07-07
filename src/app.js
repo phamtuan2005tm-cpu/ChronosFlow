@@ -46,7 +46,9 @@ app.use(scheduleRoutes);
 app.use('/api/learning', learningRoutes); 
 app.use('/api/finance', financeRoutes);
 app.use('/api', dashboardRoutes); 
-app.use('/api/settingRoutes', settingRoutes); // Giữ nguyên ánh xạ cổng gốc của Tuấn
+
+// 🟢 ĐÃ SỬA: Đổi tiền tố từ '/api/settingRoutes' thành '/api' để khớp chuẩn đét với Front-end /api/user-settings
+app.use('/api', settingRoutes); 
 
 // 🟢 ĐIỀU HƯỚNG GỐC CHUẨN (Trả lại dòng code này của Tuấn để bẻ khóa lỗi Cannot GET)
 app.get('/', (req, res) => {
