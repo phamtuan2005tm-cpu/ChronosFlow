@@ -37,6 +37,7 @@ app.use(session({
 }));
 
 // 6. ĐẤU NỐI ĐỒNG BỘ CÁC CỔNG ROUTE
+
 app.use('/', authRoutes); 
 app.use('/api', taskRoutes);
 app.use(scheduleRoutes); 
@@ -49,6 +50,9 @@ app.use('/api', settingRoutes); // 🟢 Đấu nối cổng local duy nhất s�
 const { initNotificationJobs } = require('./jobs/notificationJob');
 initNotificationJobs();
 // 7. KÍCH HOẠT SERVER
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
 app.listen(PORT, () => {
     console.log(`🚀 ChronosFlow Server chạy chuẩn MVC tại: http://localhost:${PORT}`);
 });
