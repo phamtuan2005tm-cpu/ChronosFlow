@@ -1,547 +1,520 @@
+/* ==========================================================================
+   🧱 1. RESET BÀI BẢN VỀ 0 & CẤU HÌNH NỀN TẢNG PC
+   ========================================================================== */
 * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f4f7fc;
-            color: #333333;
-            display: flex;
-            height: 100vh;
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f7fc;
+    color: #333333;
+    display: flex;
+    height: 100vh;
+}
 
-        .sidebar {
-            width: 260px;
-            background-color: #0F2854;
-            color: #ffffff;
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+/* KHUNG SIDEBAR GỐC (PC) */
+/* ==========================================================================
+   🧭 CẤU HÌNH SIDEBAR PC & HIỆU ỨNG THU NHỎ (COLLAPSE)
+   ========================================================================== */
+.sidebar {
+    width: 260px;
+    background-color: #0F2854;
+    color: #ffffff;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease; /* Hiệu ứng mượt mà */
+    overflow: hidden; /* Giữ chữ không bị tràn ra ngoài khi đang co lại */
+}
 
-        .brand-logo {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 40px;
-            padding-left: 10px;
-        }
+/* 🎯 TRẠNG THÁI THU NHỎ (Khi có class .collapsed) */
+.sidebar.collapsed {
+    width: 80px !important;
+    padding: 30px 15px !important;
+}
 
-        .brand-logo img {
-            width: 100px;
-        }
+/* Ẩn chữ Logo hoặc thu nhỏ Logo lại khi đóng */
+.sidebar.collapsed .brand-logo {
+    text-align: center;
+    padding-left: 0 !important;
+    font-size: 16px !important;
+}
+.sidebar.collapsed .brand-logo img {
+    width: 40px !important; /* Thu nhỏ logo ảnh để vừa vặn hòm 80px */
+}
 
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+/* 🚨 QUYẾT ĐỊNH: Ẩn toàn bộ chữ của Menu Item khi thu nhỏ, chỉ để lại Icon */
+.sidebar.collapsed .nav-item a span,
+.sidebar.collapsed .btn-logout span,
+.sidebar.collapsed .menu-text {
+    display: none !important; /* Giấu sạch chữ đi tránh đè lấn lên icon */
+}
 
-        .nav-item {
-            cursor: pointer;
-        }
+/* Căn giữa icon khi menu thu nhỏ */
+.sidebar.collapsed .nav-item a,
+.sidebar.collapsed .btn-logout {
+    text-align: center;
+    padding: 12px 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .nav-item a{
-            display: block;
-            color: #a5b4fc;
-            text-decoration: none;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .fa-solid {
-            padding-right: 10px;
-        }
-        /* Khi li có class active hoặc khi hover thì đổi màu */
-        .nav-item.active a,
-        .nav-item a:hover {
-            background-color: #1C4D8D;
-            color: #ffffff;
-        }
+.sidebar.collapsed .fa-solid {
+    padding-right: 0 !important; /* Bỏ padding phải của icon để nó nằm chính giữa */
+    font-size: 18px;
+}
 
-        .btn-logout {
-            color: #fda4af;
-            text-decoration: none;
-            padding: 12px 15px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .btn-logout:hover {
-            background-color: rgba(224, 36, 36, 0.1);
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            gap: 30px;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .welcome-title {
-            color: #0F2854;
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
-
-        .stat-card {
-            background-color: #ffffff;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(15, 40, 84, 0.03);
-            border: 1px solid #eef2f6;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: #6c757d;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: #0F2854;
-        }
-
-        .dashboard-body {
-            background-color: #ffffff;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(15, 40, 84, 0.04);
-            text-align: center;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-        .form-group{
-            display: flex;
-            justify-content: center;
-        }
-        .placeholder-icon {
-            font-size: 48px;
-            color: #4988C4;
-        }
-
-        .body-title {
-            color: #0F2854;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .body-text {
-            color: #6c757d;
-            max-width: 400px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        /* ⚙️ CƠ CHẾ ẨN HIỆN TAB NỘI DUNG */
-        .tab-content {
-            display: none;
-            /* Mặc định ẩn toàn bộ */
-            flex-direction: column;
-            gap: 30px;
-            flex: 1;
-        }
-
-        .tab-content.active {
-            display: flex;
-            /* Chỉ hiện phân khu nào có class active */
-        }
-
-        /* =========================================================================
-           🛠️ CSS UPGRADE FOR PARTIALS (TASKS, SCHEDULES, LEARNING)
-           ========================================================================= */
-        /* CSS dùng chung cho Inline Forms */
-        .task-form-card,
-        .schedule-form-card,
-        .stopwatch-card,
-        .logs-history-card {
-            background: #ffffff;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(15, 40, 84, 0.03);
-            border: 1px solid #eef2f6;
-        }
-
-        .task-inline-form,
-        .schedule-inline-form {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .flex-3 {
-            flex: 3;
-            min-width: 200px;
-        }
-
-        .flex-2 {
-            flex: 2;
-            min-width: 180px;
-        }
-
-        .flex-1 {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #6c757d;
-        }
-
-        .form-group input,
-        .form-group select {
-            padding: 10px 14px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 14px;
-            color: #333;
-            outline: none;
-            background-color: #fff;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #1C4D8D;
-        }
-
-        .btn-add-task,
-        .btn-add-schedule {
-            background-color: #1C4D8D;
-            color: #ffffff;
-            border: none;
-            padding: 11px 20px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
-            height: 41px;
-        }
-
-        .btn-add-task:hover,
-        .btn-add-schedule:hover {
-            background-color: #0F2854;
-        }
-
-        /* --- CSS KANBAN BOARD --- */
-        .kanban-board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            height: calc(100vh - 290px);
-        }
-
-        .task-list {
+/* ==========================================================================
+   📦 ĐỘ CO GIÃN CỦA VÙNG NỘI DUNG CHÍNH (.main-content)
+   ========================================================================== */
+.main-content {
     flex: 1;
-    overflow-y: auto;  /* Nhiều task tự động xuất hiện thanh cuộn riêng nội bộ */
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 30px;
+    transition: margin-left 0.3s ease; /* Đồng bộ nhịp co giãn với sidebar */
+}
+.brand-logo {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 40px;
+    padding-left: 10px;
+}
+
+.brand-logo img {
+    width: 100px;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-item {
+    cursor: pointer;
+}
+
+.nav-item a {
+    display: block;
+    color: #a5b4fc;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.fa-solid {
+    padding-right: 10px;
+}
+
+.nav-item.active a,
+.nav-item a:hover {
+    background-color: #1C4D8D;
+    color: #ffffff;
+}
+
+.btn-logout {
+    color: #fda4af;
+    text-decoration: none;
+    padding: 12px 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.btn-logout:hover {
+    background-color: rgba(224, 36, 36, 0.1);
+}
+
+/* VÙNG NỘI DUNG CHÍNH (PC) */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 30px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.welcome-title {
+    color: #0F2854;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* HỆ THỐNG LƯỚI CARDS THỐNG KÊ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(15, 40, 84, 0.03);
+    border: 1px solid #eef2f6;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0F2854;
+}
+
+.dashboard-body {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(15, 40, 84, 0.04);
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.placeholder-icon {
+    font-size: 48px;
+    color: #4988C4;
+}
+
+.body-title {
+    color: #0F2854;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.body-text {
+    color: #6c757d;
+    max-width: 400px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ⚙️ CƠ CHẾ ẨN HIỆN TAB NỘI DUNG */
+.tab-content {
+    display: none;
+    flex-direction: column;
+    gap: 30px;
+    flex: 1;
+}
+
+.tab-content.active {
+    display: flex;
+}
+
+/* =========================================================================
+   🛠️ 2. CSS PHÂN HỆ KHỐI CHI TIẾT (PARTIALS: TASKS, SCHEDULES, LEARNING)
+   ========================================================================= */
+.task-form-card,
+.schedule-form-card,
+.stopwatch-card,
+.logs-history-card {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(15, 40, 84, 0.03);
+    border: 1px solid #eef2f6;
+}
+
+.task-inline-form,
+.schedule-inline-form {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.flex-3 { flex: 3; min-width: 200px; }
+.flex-2 { flex: 2; min-width: 180px; }
+.flex-1 { flex: 1; min-width: 120px; }
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #1C4D8D;
+}
+
+.btn-add-task,
+.btn-add-schedule {
+    background-color: #1C4D8D;
+    color: #ffffff;
+    border: none;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    height: 41px;
+}
+
+.btn-add-task:hover,
+.btn-add-schedule:hover {
+    background-color: #0F2854;
+}
+
+/* --- KANBAN BOARD SYSTEM --- */
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    height: calc(100vh - 290px);
+}
+
+.kanban-column {
+    background-color: #edf2f7;
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+}
+
+.status-todo { color: #4a5568; border-color: #cbd5e1; }
+.status-progress { color: #1C4D8D; border-color: #4988C4; }
+.status-done { color: #10b981; border-color: #10b981; }
+
+.task-count {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.task-list {
+    flex: 1;
+    overflow-y: auto;
     padding-right: 5px;
     max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
-        .kanban-column {
-            background-color: #edf2f7;
-            border-radius: 12px;
-            padding: 16px;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
 
-        .column-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 700;
-            font-size: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid;
-        }
+.task-item {
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 8px;
+    border-left: 4px solid;
+    display: flex;
+    flex-direction: column;
+}
 
-        .status-todo {
-            color: #4a5568;
-            border-color: #cbd5e1;
-        }
+.border-low { border-left-color: #cbd5e1; }
+.border-medium { border-left-color: #4988C4; }
+.border-high { border-left-color: #ef4444; }
 
-        .status-progress {
-            color: #1C4D8D;
-            border-color: #4988C4;
-        }
+.task-item-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0F2854;
+    padding-bottom: 12px;
+}
 
-        .status-done {
-            color: #10b981;
-            border-color: #10b981;
-        }
+.task-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    border-top: 1px dashed #e2e8f0;
+    color: #6c757d;
+    padding-top: 10px;
+}
 
-        .task-count {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
+.badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
 
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+.priority-low { background: #f1f5f9; color: #64748b; }
+.priority-medium { background: #e0f2fe; color: #0369a1; }
+.priority-high { background: #fee2e2; color: #b91c1c; }
 
-        .task-item {
-            background: #ffffff;
-            padding: 16px;
-            border-radius: 8px;
-            border-left: 4px solid;
-            display: flex;
-            flex-direction: column;
-        }
+.task-actions {
+    display: flex;
+    justify-content: flex-end;
+}
 
-        .border-low {
-            border-left-color: #cbd5e1;
-        }
+.btn-action {
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
 
-        .border-medium {
-            border-left-color: #4988C4;
-        }
+.btn-next { color: #1C4D8D; background: #e0f2fe; }
 
-        .border-high {
-            border-left-color: #ef4444;
-        }
+/* --- TIMETABLE & STOPWATCH SYSTEM --- */
+.timetable-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #eef2f6;
+    overflow-x: auto;
+}
 
-        .task-item-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0F2854;
-            padding-bottom: 12px;
-        }
+.timetable-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
 
-        .task-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center ;
-            font-size: 11px;
-            border-top: 1px dashed #e2e8f0;
-            color: #6c757d;
-            padding-top: 10px;
-        }
+.timetable-table th,
+.timetable-table td {
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    font-size: 14px;
+}
 
-        .badge {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
+.timetable-table th {
+    background-color: #0F2854;
+    color: #ffffff;
+    font-weight: 600;
+}
 
-        .priority-low {
-            background: #f1f5f9;
-            color: #64748b;
-        }
+.time-col {
+    font-weight: 600;
+    color: #4a5568;
+    background-color: #f8fafc;
+    width: 130px;
+}
 
-        .priority-medium {
-            background: #e0f2fe;
-            color: #0369a1;
-        }
+.slot-box {
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
 
-        .priority-high {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
+.color-blue { background-color: #e0f2fe; color: #0369a1; border-left: 4px solid #4988C4; }
+.color-navy { background-color: #e0e7ff; color: #4338ca; border-left: 4px solid #0F2854; }
+.color-cyan { background-color: #ecfeff; color: #0891b2; border-left: 4px solid #BDE8F5; }
 
-        .task-actions {
-            display: flex;
-            justify-content: flex-end;
-        }
+.stopwatch-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
 
-        .btn-action {
-            border: none;
-            background: transparent;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
+.stopwatch-display {
+    font-size: 42px;
+    font-weight: 700;
+    color: #0F2854;
+    margin: 15px 0;
+    font-family: monospace;
+    letter-spacing: 2px;
+}
 
-        .btn-next {
-            color: #1C4D8D;
-            background: #e0f2fe;
-        }
+.stopwatch-controls {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
 
-        /* --- CSS WEEKLY TIMETABLE --- */
-        .timetable-container {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #eef2f6;
-            overflow-x: auto;
-        }
+.btn-stopwatch {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
 
-        .timetable-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-        }
+.btn-stopwatch.start { background-color: #10b981; color: white; }
+.btn-stopwatch.reset { background-color: #64748b; color: white; }
 
-        .timetable-table th,
-        .timetable-table td {
-            border: 1px solid #e2e8f0;
-            padding: 12px;
-            font-size: 14px;
-        }
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
 
-        .timetable-table th {
-            background-color: #0F2854;
-            color: #ffffff;
-            font-weight: 600;
-        }
+.history-table th,
+.history-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+}
 
-        .time-col {
-            font-weight: 600;
-            color: #4a5568;
-            background-color: #f8fafc;
-            width: 130px;
-        }
+.history-table th { color: #6c757d; font-weight: 600; }
+.doc-link { color: #1C4D8D; text-decoration: none; font-weight: 500; }
+.doc-link:hover { text-decoration: underline; }
 
-        .slot-box {
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .color-blue {
-            background-color: #e0f2fe;
-            color: #0369a1;
-            border-left: 4px solid #4988C4;
-        }
-
-        .color-navy {
-            background-color: #e0e7ff;
-            color: #4338ca;
-            border-left: 4px solid #0F2854;
-        }
-
-        .color-cyan {
-            background-color: #ecfeff;
-            color: #0891b2;
-            border-left: 4px solid #BDE8F5;
-        }
-
-        /* --- CSS STOPWATCH & LOGS --- */
-        .stopwatch-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .stopwatch-display {
-            font-size: 42px;
-            font-weight: 700;
-            color: #0F2854;
-            margin: 15px 0;
-            font-family: monospace;
-            letter-spacing: 2px;
-        }
-
-        .stopwatch-controls {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        .btn-stopwatch {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-stopwatch.start {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .btn-stopwatch.reset {
-            background-color: #64748b;
-            color: white;
-        }
-
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        .history-table th,
-        .history-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 14px;
-        }
-
-        .history-table th {
-            color: #6c757d;
-            font-weight: 600;
-        }
-
-        .doc-link {
-            color: #1C4D8D;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .doc-link:hover {
-            text-decoration: underline;
-        }
-
-        /* =========================================================================
-   🎨 KANBAN TASK CARDS & PRIORITY COLORS ARCHITECTURE
-   ========================================================================= */
-
-/* Cấu hình nền và đổ bóng chung cho thẻ task khi kéo thả */
+/* KANBAN TASK CARDS COLORS DESIGN */
 .task-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -556,41 +529,17 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.task-card:active {
-    cursor: grabbing;
-}
+.task-card:active { cursor: grabbing; }
 
-/* 🔴 Mức độ: High (Nghiêm trọng / Khẩn cấp) */
-.task-card.priority-high {
-    border-left: 5px solid #ef4444 !important; /* Vạch đỏ bên trái card */
-}
-.task-card.priority-high .badge-priority {
-    background-color: #fef2f2;
-    color: #ef4444;
-    border: 1px solid #fee2e2;
-}
+.task-card.priority-high { border-left: 5px solid #ef4444 !important; }
+.task-card.priority-high .badge-priority { background-color: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
 
-/* 🟡 Mức độ: Medium (Trung bình) */
-.task-card.priority-medium {
-    border-left: 5px solid #f59e0b !important; /* Vạch vàng cam bên trái card */
-}
-.task-card.priority-medium .badge-priority {
-    background-color: #fffbeb;
-    color: #d97706;
-    border: 1px solid #fef3c7;
-}
+.task-card.priority-medium { border-left: 5px solid #f59e0b !important; }
+.task-card.priority-medium .badge-priority { background-color: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
 
-/* 🔵 Mức độ: Low (Thấp / Thảnh thơi) */
-.task-card.priority-low {
-    border-left: 5px solid #3b82f6 !important; /* Vạch xanh dương bên trái card */
-}
-.task-card.priority-low .badge-priority {
-    background-color: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #dcfce7;
-}
+.task-card.priority-low { border-left: 5px solid #3b82f6 !important; }
+.task-card.priority-low .badge-priority { background-color: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
 
-/* Style cho nhãn đính kèm (Badge Priority) bên trong card */
 .badge-priority {
     display: inline-block;
     font-size: 11px;
@@ -598,4 +547,227 @@
     padding: 2px 6px;
     border-radius: 12px;
     margin-top: 4px;
+}
+
+/* ==========================================================================
+   ⚙️ 3. ĐẦU NÃO RESPONSIVE MOBILE-FIRST ĐÃ ĐƯỢC BỌC THÉP TOÀN DIỆN
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+    /* 🧱 Đổi trục chính từ hàng ngang PC về hàng dọc Mobile */
+    body {
+        flex-direction: column !important;
+        height: auto !important;
+        overflow-y: auto !important;
+    }
+
+    /* 🧭 Biến Sidebar dọc thành thanh Header ngang trên đỉnh di động */
+    .sidebar {
+        width: 100% !important;
+        height: auto !important;
+        padding: 12px 16px !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        box-shadow: 0 4px 12px rgba(15, 40, 84, 0.15);
+    }
+
+    .brand-logo {
+        margin-bottom: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .brand-logo img {
+        width: 85px !important;
+    }
+
+    button[onclick="toggleSidebar()"],
+    .menu-text,
+    .btn-logout span > span {
+        display: none !important;
+    }
+
+    .nav-menu {
+        flex-direction: row !important;
+        gap: 5px !important;
+    }
+
+    .nav-item a {
+        padding: 10px 12px !important;
+        font-size: 16px !important;
+    }
+
+    .btn-logout {
+        padding: 10px !important;
+        font-size: 16px !important;
+    }
+
+    /* 📦 Khu vực nội dung chính */
+    .main-content {
+        padding: 20px 16px !important;
+        gap: 20px !important;
+        margin-left: 0 !important;
+    }
+
+    .sidebar.collapsed ~ .main-content,
+    body:has(.sidebar.collapsed) .main-content {
+        margin-left: 0 !important;
+        padding-left: 16px !important;
+    }
+
+    .header-content {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px;
+    }
+
+    .welcome-title { font-size: 22px !important; }
+
+    /* 📊 Chia lưới thống kê thành 2 cột đều đặn */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    .stat-card { padding: 16px !important; }
+    .stat-value { font-size: 18px !important; }
+
+    /* 📋 Duỗi phẳng Kanban Board thành hàng dọc vuốt cuộn mượt mà */
+    .kanban-board {
+        grid-template-columns: 1fr !important;
+        height: auto !important;
+        gap: 16px !important;
+    }
+
+    .kanban-column {
+        min-height: auto !important;
+        max-height: 450px !important;
+    }
+
+    /* Đưa form thêm nhanh về cấu trúc block 100% bề ngang */
+    .task-inline-form,
+    .schedule-inline-form {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    .flex-1, .flex-2, .flex-3 {
+        width: 100% !important;
+    }
+
+    .btn-add-task, .btn-add-schedule {
+        width: 100% !important;
+        height: 44px !important;
+    }
+
+    .timetable-container {
+        padding: 10px !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .timetable-table th, .timetable-table td {
+        padding: 8px 6px !important;
+        font-size: 12px !important;
+    }
+
+    .chart-block-left, .chart-block-center, .chart-block-right, .dashboard-body {
+        padding: 20px !important;
+        min-height: 280px !important;
+    }
+    
+    .stopwatch-display { font-size: 32px !important; }
+
+    /* ==========================================================================
+       📅 4. PHÂN HỆ LỊCH TRÌNH (SCHEDULES): SỬA TRIỆT ĐỂ LỖI ĐÈ CHỮ VÀ CHIA DỌC LAYOUT
+       ========================================================================== */
+    .calendar-dashboard-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+
+    .calendar-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .calendar-main-board {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+    }
+
+    /* 🚨 SỬA TRIỆT ĐỂ: Biến thanh Top-bar ngang thành Block dọc, hủy bó buộc flex cũ */
+    body .calendar-top-bar {
+        display: flex !important;
+        flex-direction: column !important; /* Chia dọc thành 3 tầng */
+        gap: 12px !important;
+        padding: 15px 10px !important;
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    /* Cụm nút mũi tên lên dòng đầu */
+    body .calendar-top-bar > div:first-child {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        order: 1 !important;
+    }
+
+    /* 🛡️ CHỐT HẠ TIÊU ĐỀ: Đứng độc lập dòng giữa trung tâm, cấm bẻ đôi chữ rớt dòng */
+    body #calendar-view-title {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        white-space: nowrap !important; /* Ép chữ thẳng tắp một hàng */
+        display: block !important;
+        width: 100% !important;
+        margin: 4px 0 !important;
+        order: 2 !important;
+        text-align: center !important;
+    }
+
+    /* Cụm switcher chế độ xem xuống hàng cuối */
+    body .view-switcher {
+        display: inline-flex !important;
+        justify-content: center !important;
+        width: auto !important;
+        max-width: 100% !important;
+        order: 3 !important;
+        margin: 0 auto !important;
+    }
+
+    body .calendar-top-bar button {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        height: 34px !important;
+    }
+
+    /* ==========================================================================
+       📚 5. PHÂN HỆ HỌC TẬP (LEARNING HUB): CHỐNG BÓP NGHẸT PHÂN CỘT KHÓA HỌC
+       ========================================================================== */
+    #learning .learning-panel, 
+    #learning .tab-content,
+    #learning div[style*="display: flex"],
+    #learning div[style*="display:flex"] {
+        flex-direction: column !important; 
+    }
+
+    #learning .calendar-sidebar,
+    #learning .learning-sidebar,
+    #learning div[style*="width: 30%"],
+    #learning div[style*="width:30%"],
+    #learning div[style*="width: 70%"],
+    #learning div[style*="width:70%"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    #learning div[style*="display: flex; gap: 20px"] {
+        gap: 10px !important;
+    }
 }

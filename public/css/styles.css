@@ -149,3 +149,65 @@ body {
 .forgot-link:hover, .signup-link:hover {
     text-decoration: underline;
 }
+/* ==========================================================================
+   ⚙️ CHRONOSFLOW MOBILE-FIRST RESPONSIVE ENGINE (CO MÀN HÌNH < 480PX)
+   ========================================================================== */
+/* ==========================================================================
+   ⚙️ CHRONOSFLOW MOBILE-FIRST RESPONSIVE ENGINE (BẢN GIỮ BACKGROUND)
+   ========================================================================== */
+@media screen and (max-width: 480px) {
+    body {
+        /* 🌌 Giữ lại hình nền nhưng ép căn giữa và phủ kín màn hình điện thoại */
+        background-image: url("/images/background-2.jpg");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        background-attachment: fixed; /* Cực kỳ quan trọng: Giữ ảnh cố định khi cuộn/bàn phím đẩy lên */
+    }
+
+    .login-wrapper {
+        padding: 16px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center; /* Căn giữa card theo chiều dọc trên mobile */
+    }
+
+    .login-card {
+        padding: 32px 20px;
+        border-radius: 16px; /* Bo góc mượt mà đồng bộ */
+        /* Tăng nhẹ độ đậm của shadow để nổi bật hẳn trên nền ảnh của Tuấn */
+        box-shadow: 0 12px 40px rgba(15, 40, 84, 0.15); 
+        background-color: rgba(255, 255, 255, 0.98); /* Khử độ xuyên thấu nhẹ giúp chữ rõ nét, dễ đọc */
+    }
+
+    .brand-header {
+        margin-bottom: 24px;
+    }
+
+    .brand-title {
+        font-size: 24px;
+        letter-spacing: -0.3px;
+    }
+
+    .brand-slogan {
+        font-size: 13px;
+        padding: 0 10px;
+    }
+
+    .form-input {
+        padding: 14px 16px;
+        font-size: 16px; /* Chống auto-zoom đáng ghét trên iOS */
+    }
+
+    .btn-submit {
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        height: 48px;
+    }
+
+    .form-footer {
+        margin-top: 20px;
+        font-size: 13px;
+    }
+}

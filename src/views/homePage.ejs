@@ -453,11 +453,16 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('main-sidebar');
             const toggleIcon = document.getElementById('sidebar-toggle-icon');
-            if (!sidebar) return;
-            sidebar.classList.toggle('collapsed');
-            toggleIcon.className = sidebar.classList.contains('collapsed') ? 'fa-solid fa-angles-right' : 'fa-bars';
-        }
+            if (!sidebar || !toggleIcon) return;
 
+            // Bật/Tắt class collapsed
+            sidebar.classList.toggle('collapsed');
+
+            // 🚨 VÁ LỖI CỐT LÕI: Thêm đầy đủ class 'fa-solid fa-bars' để icon không bị biến mất
+            toggleIcon.className = sidebar.classList.contains('collapsed')
+                ? 'fa-solid fa-angles-right'
+                : 'fa-solid fa-bars';
+        }
         function startLiveClock() {
             const timeEl = document.getElementById('live-time');
             const dateEl = document.getElementById('live-date');
