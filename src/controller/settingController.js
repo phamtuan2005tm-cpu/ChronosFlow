@@ -1,8 +1,7 @@
 const db = require('../config/database');
 
-// Bộ nhớ tạm thời (Mock Config) để đồng bộ trạng thái giao diện Front-end
+// Bộ nhớ tạm thời (Mock Config) để giữ trạng thái Dark Mode và Tần suất Email
 let localUserConfig = {
-    username: "tuấn",
     darkMode: false,
     allowEmail: false,
     emailFrequency: "medium"
@@ -17,50 +16,51 @@ exports.getUserSettings = async (req, res) => {
     const userId = req.session.user.id;
 
     try {
-        // Lấy thông báo cấu hình email từ bảng users dựa vào ID người dùng đang đăng nhập
-        const [userRows] = await db.execute("SELECT username, is_notification_enabled FROM users WHERE id = ?", [userId]);
+        // 🚨 DATABASE CHỈ CÓ user_email và is_notification_enabled -> LẤY ĐÚNG 2 CỘT NÀY
+        const [userRows] = await db.execute(
+            "SELECT user_email, is_notification_enabled FROM users WHERE id = ?", 
+            [userId]
+        );
         
         if (userRows.length > 0) {
-            // Đồng bộ tên và trạng thái gửi mail từ DB vào bộ nhớ tạm
-            if (userRows[0].username) localUserConfig.username = userRows[0].username;
+            // Đồng bộ trạng thái từ DB vào bộ nhớ tạm
             localUserConfig.allowEmail = userRows[0].is_notification_enabled === 1;
         }
 
         return res.status(200).json(localUserConfig);
     } catch (error) {
-        console.error("🚨 lỗi nạp cấu hình tại settingController:", error);
-        // Nếu lỗi, trả về cấu hình mặc định để Front-end không bị crash giao diện
+        console.error("🚨 Lỗi nạp cấu hình tại settingController:", error);
         return res.status(500).json(localUserConfig);
     }
 };
 
-// ⚙️ 2. SAVE NEW USER SETTINGS
+// ⚙️ 2. SAVE NEW USER SETTINGS (BẢN VÁ LỖI CHỐT HẠ)
 exports.saveUserSettings = async (req, res) => {
     if (!req.session.user || !req.session.user.id) {
         return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
     const userId = req.session.user.id;
+    // Front-end gửi lên: { username, darkMode, allowEmail, emailFrequency }
     const { username, darkMode, allowEmail, emailFrequency } = req.body;
 
     try {
-        // 🔄 CẬP NHẬT THẲNG XUỐNG DATABASE CỦA TUẤN
-        // Đổi trạng thái true/false từ switch gạt sang dạng 1/0 của MySQL
+        // 🔄 Đổi trạng thái true/false sang dạng 1/0 của MySQL TINYINT(1)
         const emailToggleBit = allowEmail ? 1 : 0;
         
-        // Cập nhật cả cột username và is_notification_enabled trong bảng users
+        // 🛡️ CÂU LỆNH SQL VÁ LỖI: Chỉ UPDATE cột tồn tại thực tế (is_notification_enabled)
         await db.execute(
-            "UPDATE users SET username = ?, is_notification_enabled = ? WHERE id = ?", 
-            [username, emailToggleBit, userId]
+            "UPDATE users SET is_notification_enabled = ? WHERE id = ?", 
+            [emailToggleBit, userId]
         );
 
-        // Ghi đè dữ liệu mới vào cấu hình cục bộ để giữ trạng thái Dark Mode
-        localUserConfig = { username, darkMode, allowEmail, emailFrequency };
+        // Ghi đè dữ liệu mới vào bộ nhớ tạm để Front-end không bị mất trạng thái Dark Mode / Tần suất
+        localUserConfig = { darkMode, allowEmail, emailFrequency };
 
-        // Đồng bộ lại tên mới vào session để toàn bộ trang web nhận diện đúng tên Tuấn
-        req.session.user.username = username;
+        // Nếu Front-end có dùng session username, ta gán tạm bằng email hoặc giá trị gửi lên để tránh lỗi
+        req.session.user.username = username || req.session.user.user_email;
 
-        console.log(`📡 settingController Engine: Lưu thành công cấu hình cho User ID ${userId}`);
+        console.log(`🟢 Settings Engine: Lưu thành công cấu hình thông báo cho User ID ${userId} (Trạng thái: ${emailToggleBit})`);
         return res.status(200).json({ success: true, message: "Settings saved successfully" });
 
     } catch (error) {

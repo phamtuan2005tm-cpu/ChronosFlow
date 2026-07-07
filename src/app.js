@@ -45,6 +45,9 @@ app.use('/api/finance', financeRoutes);
 app.use('/api', dashboardRoutes); 
 app.use('/api', settingRoutes); // 🟢 Đấu nối cổng local duy nhất sạch rác
 
+// 💡 Nếu chạy lệnh trên vẫn báo lỗi, Tuấn đổi dấu gạch chéo cụ thể thành:
+const { initNotificationJobs } = require('./jobs/notificationJob');
+initNotificationJobs();
 // 7. KÍCH HOẠT SERVER
 app.listen(PORT, () => {
     console.log(`🚀 ChronosFlow Server chạy chuẩn MVC tại: http://localhost:${PORT}`);

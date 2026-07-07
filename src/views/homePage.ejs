@@ -109,8 +109,32 @@
 
 
         /* ==========================================================================
-       🧱 3. ÉP TOÀN BỘ CẤU TRÚC CÁC TRANG CON ĂN THEO BIẾN MÀU HỆ THỐNG
-       ========================================================================== */
+   🚨 HỆ THỐNG BIẾN MÀU CENTRAL DARK/LIGHT MODE ĐỒNG BỘ TOÀN DIỆN CHRONOSFLOW
+   ========================================================================== */
+
+        /* 1. CHẾ ĐỘ SÁNG MẶC ĐỊNH (LIGHT MODE) */
+        :root {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --bg-input: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        /* 2. CHẾ ĐỘ TỐI KHI KÍCH HOẠT (DARK MODE) */
+        body.dark-mode-active {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --bg-input: #334155;
+            --border-color: #334155;
+        }
+
+        /* ==========================================================================
+   🧱 ÉP TOÀN BỘ CẤU TRÚC CÁC TRANG CON ĂN THEO BIẾN MÀU HỆ THỐNG
+   ========================================================================== */
 
         body {
             background-color: var(--bg-main) !important;
@@ -122,66 +146,77 @@
         .main-content,
         .tab-content,
         .dashboard-wrapper,
-        .task-management-wrapper {
+        .task-management-wrapper,
+        .calendar-dashboard-layout {
             background-color: var(--bg-main) !important;
             color: var(--text-main) !important;
         }
 
-        /* ĐÈ CHÍNH XÁC THEO TỪNG THỂ STYLE TRONG MÃ THÔ CỦA TUẤN */
+        /* 🚨 ĐÈ MÀU KHỐI CARD CHO CHẾ ĐỘ DARK MODE (SỬA LỖI TRẮNG NỀN) */
         body.dark-mode-active div[style*="background: #fff"],
         body.dark-mode-active div[style*="background: white"],
         body.dark-mode-active div[style*="background-color: #fff"],
         body.dark-mode-active div[style*="background-color: white"],
+        body.dark-mode-active .stat-card,
+        body.dark-mode-active .chart-block-left,
+        body.dark-mode-active .chart-block-center,
+        body.dark-mode-active .chart-block-right,
+        body.dark-mode-active .settings-wrapper,
         body.dark-mode-active .task-form-card,
         body.dark-mode-active .category-filters,
         body.dark-mode-active .calendar-main-board,
-        body.dark-mode-active #debt-detail-modal>div,
-        body.dark-mode-active #schedule-detail-modal>div,
-        body.dark-mode-active #task-detail-modal>div,
-        body.dark-mode-active #text-input-modal>div,
-        body.dark-mode-active #pending-bills-zone,
-        body.dark-mode-active .kanban-column {
+        body.dark-mode-active .kanban-column,
+        body.dark-mode-active #schedule-form-card,
+        body.dark-mode-active .calendar-sidebar>div {
             background-color: var(--bg-card) !important;
+            background: var(--bg-card) !important;
             color: var(--text-main) !important;
             border-color: var(--border-color) !important;
         }
 
-        /* 📅 1. Tab Lịch trình (Schedules - Sửa dứt điểm ô lưới tháng) */
-        body.dark-mode-active #schedule-creation-form button[style*="background: #fff"],
-        body.dark-mode-active .btn-day-checkbox,
-        body.dark-mode-active .calendar-top-bar,
-        body.dark-mode-active .calendar-top-bar button,
+        /* 📅 1. Tab Lịch trình (Schedules - Xử lý triệt để FullCalendar lồng nhau) */
+        body.dark-mode-active .fc,
         body.dark-mode-active .fc-view-harness,
         body.dark-mode-active .fc-view-harness *,
-        /* Ép toàn bộ các thẻ con bên trong FullCalendar */
+        body.dark-mode-active .fc-scrollgrid,
+        body.dark-mode-active .fc-scroller,
+        body.dark-mode-active .fc-daygrid-day-frame,
+        body.dark-mode-active .fc-daygrid-day-top,
         body.dark-mode-active .fc-daygrid-day,
-        body.dark-mode-active .fc-daygrid-bg-nav,
-        body.dark-mode-active .fc-scrollgrid {
+        body.dark-mode-active td.fc-daygrid-day {
             background-color: var(--bg-card) !important;
-            color: var(--text-main) !important;
+            background: var(--bg-card) !important;
             border-color: var(--border-color) !important;
         }
 
         body.dark-mode-active .fc-theme-standard td,
-        body.dark-mode-active .fc-theme-standard th,
-        body.dark-mode-active #schedule-board-content div {
+        body.dark-mode-active .fc-theme-standard th {
+            border: 1px solid var(--border-color) !important;
+        }
+
+        body.dark-mode-active .fc-day-other {
+            background-color: var(--bg-main) !important;
+            opacity: 0.5;
+        }
+
+        /* 📚 2. Tab Học tập (Learning Hub - Sửa tận gốc ô môn học sinh động từ JS) */
+        body.dark-mode-active #subjects-list-group div,
+        body.dark-mode-active #subjects-list-group div * {
+            background-color: var(--bg-card) !important;
+            background: var(--bg-card) !important;
+            color: var(--text-main) !important;
             border-color: var(--border-color) !important;
         }
 
-        /* 📁 2. Tab Công việc (Tasks - Sửa dứt điểm tag mức độ Priority) */
+        /* 📁 3. Tab Công việc (Tasks) */
         body.dark-mode-active select#proj-priority,
-        body.dark-mode-active select#task-priority {
+        body.dark-mode-active select#task-priority,
+        body.dark-mode-active select#sched-category,
+        body.dark-mode-active select#sched-type {
             background-color: var(--bg-input) !important;
             color: var(--text-main) !important;
         }
 
-        body.dark-mode-active .task-inline-form,
-        body.dark-mode-active section[style*="background: #f8fafc"] {
-            background-color: var(--bg-main) !important;
-            border-color: var(--border-color) !important;
-        }
-
-        /* Sửa ô Badge Priority tròn nhỏ (Low/Medium/High) */
         body.dark-mode-active span[style*="background: #fff"],
         body.dark-mode-active span[style*="background: white"] {
             background-color: var(--bg-input) !important;
@@ -189,110 +224,48 @@
             border: 1px solid var(--border-color) !important;
         }
 
-        /* 📚 3. Tab Học tập (Learning Hub - Sửa dứt điểm ô chứa tên môn học) */
-        body.dark-mode-active #subjects-list-group div,
-        body.dark-mode-active div[style*="background: #fff"] input,
-        body.dark-mode-active .learning-panels-container div {
-            background-color: var(--bg-card) !important;
-            color: var(--text-main) !important;
-        }
-
-        /* 💰 4. Tab Tài chính (Finance Flow - Sửa dứt điểm vệt trắng thanh Timeline) */
-        body.dark-mode-active div[style*="background: #f8fafc"],
-        body.dark-mode-active div[style*="background: var(--bg-main)"],
+        /* 💰 4. Tab Tài chính (Finance Flow) */
         body.dark-mode-active thead[style*="background: #f1f5f9"],
-        body.dark-mode-active tr[style*="background: #f8fafc"] {
+        body.dark-mode-active thead[style*="background: #f1f5f9"] tr,
+        body.dark-mode-active thead[style*="background: #f1f5f9"] th {
             background-color: var(--bg-main) !important;
         }
 
-        body.dark-mode-active select#tx-type,
-        body.dark-mode-active select#modal-debt-mode {
-            background-color: var(--bg-input) !important;
-            color: var(--text-main) !important;
-        }
-
         /* ==========================================================================
-       🧱 BỔ SUNG SỬA DỨT ĐIỂM Ô MÔN HỌC ĐỘNG VÀ TIÊU ĐỀ LỊCH TRÌNH
-       ========================================================================== */
+   🖋️ 5. ÉP CHỮ VÀ INPUT ĐỔI MÀU (ĐÃ SỬA LỖI TÁCH BIỆT BỘ CHỌN)
+   ========================================================================== */
 
-        /* 🚨 Sửa ô môn học bên tab Learning (Đè sâu vào các phần tử tạo động từ JS) */
-        body.dark-mode-active #subjects-list-group div,
-        body.dark-mode-active #subjects-list-group *,
-        body.dark-mode-active .btn-sub-tab:not(.active) {
-            background-color: var(--bg-card) !important;
-            background: var(--bg-card) !important;
-            /* Triệt tiêu thuộc tính background gán cứng */
-            color: var(--text-main) !important;
-            border-color: var(--border-color) !important;
-        }
-
-        /* 🚨 Sửa chữ tiêu đề Tháng/Năm (Tháng 7, 2026) bên tab Schedules */
+        /* Ép chữ ở chế độ Dark Mode */
+        body.dark-mode-active h1,
+        body.dark-mode-active h2,
+        body.dark-mode-active h3,
+        body.dark-mode-active p,
+        body.dark-mode-active span,
+        body.dark-mode-active label,
+        body.dark-mode-active strong,
+        body.dark-mode-active th,
+        body.dark-mode-active td,
+        body.dark-mode-active i,
         body.dark-mode-active .fc-toolbar-title,
-        body.dark-mode-active #calendar-view-title {
+        body.dark-mode-active .fc-daygrid-day-number,
+        body.dark-mode-active .fc-col-header-cell-cushion {
             color: var(--text-main) !important;
         }
 
-        /* Đảm bảo các nút điều hướng tuần/tháng/ngày ăn theo màu input tối */
-        body.dark-mode-active .fc-button,
-        body.dark-mode-active .view-switcher button:not(.active) {
+        /* Ép chữ mờ ở chế độ Dark Mode */
+        body.dark-mode-active .text-muted,
+        body.dark-mode-active p[style*="color: #6c757d"],
+        body.dark-mode-active span[style*="color: #64748b"] {
+            color: var(--text-muted) !important;
+        }
+
+        /* Nhuộm tối toàn bộ các thẻ Input, Textarea, Select */
+        body.dark-mode-active input,
+        body.dark-mode-active select,
+        body.dark-mode-active textarea {
             background-color: var(--bg-input) !important;
-            color: var(--text-main) !important;
-            border-color: var(--border-color) !important;
-            background: var(--bg-input) !important;
-        }
-
-        /* ==========================================================================
-       🛡️ BỘ CHỌN TỐI THƯỢNG DIỆT TẬN GỐC VẾT TRẮNG FULLCALENDAR (SCHEDULES)
-       ========================================================================== */
-
-        /* Ép toàn bộ khung lưới, khung cuộn và các ô ngày của FullCalendar về màu nền tối */
-        body.dark-mode-active .fc,
-        body.dark-mode-active .fc-theme-standard td,
-        body.dark-mode-active .fc-theme-standard th,
-        body.dark-mode-active .fc-scrollgrid,
-        body.dark-mode-active .fc-scroller,
-        body.dark-mode-active .fc-daygrid-day-frame,
-        body.dark-mode-active .fc-daygrid-day-top,
-        body.dark-mode-active .fc-daygrid-day {
-            background-color: var(--bg-card) !important;
-            background: var(--bg-card) !important;
-            border-color: var(--border-color) !important;
-        }
-
-        /* Đè màu nền cho các ngày không thuộc tháng hiện tại (ngày mờ) */
-        body.dark-mode-active .fc-day-other {
-            background-color: var(--bg-main) !important;
-            opacity: 0.6;
-        }
-
-        /* Ép số ngày (1, 2, 3...) và chữ hiển thị trong lịch sang màu trắng sáng */
-        body.dark-mode-active .fc .fc-daygrid-day-number,
-        body.dark-mode-active .fc .fc-col-header-cell-cushion {
-            color: var(--text-main) !important;
-            font-weight: 600 !important;
-        }
-
-        /* Sửa ô hiển thị Tháng/Năm ở thanh bar phía trên */
-        body.dark-mode-active .fc-toolbar-title,
-        body.dark-mode-active #calendar-view-title {
-            color: var(--text-main) !important;
-        }
-
-        /* Định hình lại các nút bấm điều hướng (Today, Day, Week, Month) sang màu input tối */
-        body.dark-mode-active .fc-button,
-        body.dark-mode-active .fc-button-primary {
-            background-color: var(--bg-input) !important;
-            background: var(--bg-input) !important;
             color: var(--text-main) !important;
             border: 1px solid var(--border-color) !important;
-        }
-
-        /* Khi rê chuột hoặc nút đang active thì đổi màu đậm hơn chút cho đẹp */
-        body.dark-mode-active .fc-button-active,
-        body.dark-mode-active .fc-button:hover {
-            background-color: var(--bg-main) !important;
-            background: var(--bg-main) !important;
-            border-color: #2563eb !important;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -423,6 +396,57 @@
                     }
                 })
                 .catch(err => console.error('Lỗi API Core Render:', err));
+            // Thêm đoạn code này vào cuối sự kiện DOMContentLoaded (Ngay dưới dòng loadUserSettings();)
+            document.addEventListener("DOMContentLoaded", () => {
+                startLiveClock();
+                if (typeof fetchDashboardStats === 'function') fetchDashboardStats();
+                if (typeof loadUserSettings === 'function') loadUserSettings();
+
+                // 🛡️ BỘ ĐIỀU KHIỂN ÉP MÀU SCHEDULES TRỰC TIẾP BẰNG JAVASCRIPT
+                const syncScheduleDarkMode = () => {
+                    const isDarkMode = document.body.classList.contains('dark-mode-active');
+
+                    // 1. Tìm tất cả các ô lưới lịch và khung bọc FullCalendar
+                    const calendarElements = document.querySelectorAll('.fc, .fc-view-harness, .fc-scrollgrid, .fc-scroller, .fc-daygrid-day-frame, .fc-daygrid-day-top, .fc-daygrid-day, td.fc-daygrid-day');
+                    calendarElements.forEach(el => {
+                        el.style.setProperty('background-color', isDarkMode ? '#1e293b' : '#ffffff', 'important');
+                        el.style.setProperty('background', isDarkMode ? '#1e293b' : '#ffffff', 'important');
+                        el.style.setProperty('border-color', isDarkMode ? '#334155' : '#e2e8f0', 'important');
+                    });
+
+                    // 2. Sửa lỗi mất màu chữ Thời gian/Ngày tháng (Chữ số 1, 2, 3 và chữ Thứ)
+                    const calendarTexts = document.querySelectorAll('.fc-daygrid-day-number, .fc-col-header-cell-cushion, .fc-toolbar-title, #calendar-view-title');
+                    calendarTexts.forEach(el => {
+                        el.style.setProperty('color', isDarkMode ? '#f8fafc' : '#1e293b', 'important');
+                    });
+
+                    // 3. Sửa lỗi mất màu chữ Đồng hồ bên Schedules (Ép chữ màu trắng sáng ở darkmode)
+                    const clockWidget = document.querySelector('.calendar-sidebar div[style*="background: #fff"] h2, #live-time');
+                    const clockLabels = document.querySelectorAll('.calendar-sidebar div[style*="background: #fff"] div, #live-date');
+
+                    if (clockWidget) clockWidget.style.setProperty('color', isDarkMode ? '#f8fafc' : '#1e293b', 'important');
+                    clockLabels.forEach(el => el.style.setProperty('color', isDarkMode ? '#cbd5e1' : '#64748b', 'important'));
+                };
+
+                // Lắng nghe nút gạt Dark Mode để ép màu lịch chạy real-time
+                const darkModeCheck = document.getElementById('settings-darkmode');
+                if (darkModeCheck) {
+                    darkModeCheck.addEventListener('change', () => {
+                        // Đợi 50ms để class body được cập nhật xong rồi ép màu
+                        setTimeout(syncScheduleDarkMode, 50);
+                    });
+                }
+
+                // Mỗi khi người dùng bấm chuyển sang tab Schedules, chạy hàm ép màu để phòng hờ lịch load chậm
+                document.querySelectorAll('.nav-menu .nav-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        setTimeout(syncScheduleDarkMode, 150);
+                    });
+                });
+
+                // Chạy kích hoạt lần đầu tiên sau khi trang nạp xong
+                setTimeout(syncScheduleDarkMode, 500);
+            });
         }
 
         // ⚙️ 3. CÁC HÀM TIỆN ÍCH SIDEBAR VÀ ĐỒNG HỒ
@@ -474,28 +498,176 @@
         document.addEventListener("DOMContentLoaded", () => {
             startLiveClock();
             if (typeof fetchDashboardStats === 'function') fetchDashboardStats();
+            if (typeof loadUserSettings === 'function') loadUserSettings();
 
-            // Khởi tạo tải cài đặt của người dùng
-            loadUserSettings();
+            // 🛡️ BỘ ĐIỀU KHIỂN CSS INJECTION ĐẬP TAN VẾT TRẮNG FULLCALENDAR VÀ LEARNING HUB
+            // 🛡️ CẬP NHẬT BỘ ĐIỀU KHIỂN CSS INJECTION DỌN SẠCH VẾT TRẮNG CUỐI CÙNG
+            // 🛡️ BỘ ĐIỀU KHIỂN CSS INJECTION NÂNG CẤP BỌC THÉP TOÀN DIỆN TẬN GỐC
+            // 🛡️ BỘ ĐIỀU KHIỂN CSS INJECTION - BẢN THẮNG LỢI HOÀN TOÀN
+            const injectDynamicDarkModeCSS = () => {
+                let dynamicStyle = document.getElementById('chronosflow-dynamic-dark-css');
+                if (dynamicStyle) dynamicStyle.remove();
 
-            // Logic ẩn/hiện tần suất gửi email khi click bật/tắt nhận mail
-            const emailToggle = document.getElementById('settings-email-toggle');
-            const freqGroup = document.getElementById('email-frequency-group');
-            if (emailToggle && freqGroup) {
-                emailToggle.addEventListener('change', () => {
-                    freqGroup.style.opacity = emailToggle.checked ? "1" : "0.5";
-                    freqGroup.style.pointerEvents = emailToggle.checked ? "auto" : "none";
+                dynamicStyle = document.createElement('style');
+                dynamicStyle.id = 'chronosflow-dynamic-dark-css';
+
+                dynamicStyle.innerHTML = `
+            /* 📅 1. PHÂN HỆ LỊCH TRÌNH (Schedules - Định danh chính xác class cấu trúc) */
+            body.dark-mode-active .calendar-top-bar,
+            body.dark-mode-active .fc,
+            body.dark-mode-active .fc-header-toolbar,
+            body.dark-mode-active .fc-toolbar-chunk,
+            body.dark-mode-active .view-switcher,
+            body.dark-mode-active .fc-view-harness,
+            body.dark-mode-active .fc-scrollgrid,
+            body.dark-mode-active .fc-scroller,
+            body.dark-mode-active .fc-daygrid-day,
+            body.dark-mode-active .fc-daygrid-day-frame,
+            body.dark-mode-active .fc-theme-standard td,
+            body.dark-mode-active .fc-theme-standard th,
+            body.dark-mode-active .calendar-sidebar > div,
+            body.dark-mode-active .category-filters {
+                background-color: #1e293b !important;
+                background: #1e293b !important;
+                border-color: #334155 !important;
+            }
+
+            /* TRẢ LẠI NỀN TRONG SUỐT CHO CÁC THẺ CON TRONG LƯỚI ĐỂ TRÁNH LỖI THANH ĐÈ SỐ NGÀY */
+            body.dark-mode-active .fc-daygrid-day-top,
+            body.dark-mode-active .fc-daygrid-day-number,
+            body.dark-mode-active .fc-daygrid-day-events,
+            body.dark-mode-active .fc-daygrid-day-bg,
+            body.dark-mode-active .fc-col-header-cell,
+            body.dark-mode-active .fc-col-header-cell-cushion {
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+
+            /* 🚨 ÉP MÀU NỀN TỐI VÀ CHỮ TRẮNG CHO NÚT BẤM ĐIỀU HƯỚNG (<, >, Today, Month...) */
+            body.dark-mode-active .fc-button,
+            body.dark-mode-active .fc-button-primary,
+            body.dark-mode-active .view-switcher button:not(.active) {
+                background-color: #334155 !important;
+                background: #334155 !important;
+                color: #f8fafc !important;
+                border: 1px solid #475569 !important;
+                opacity: 1 !important;
+            }
+
+            /* 🚨 ÉP ICON MŨI TÊN BÊN TRONG NÚT BẤM HIỆN RÕ MÀU TRẮNG */
+            body.dark-mode-active .fc-button .fc-icon {
+                color: #f8fafc !important;
+                background: transparent !important;
+                background-color: transparent !important;
+            }
+
+            /* Hiệu ứng Hover mượt mà khi di chuột vào nút trên lịch */
+            body.dark-mode-active .fc-button:hover,
+            body.dark-mode-active .fc-button:active {
+                background-color: #2563eb !important;
+                background: #2563eb !important;
+                border-color: #2563eb !important;
+                color: #ffffff !important;
+            }
+
+            /* Giữ màu chữ hiển thị chuẩn chỉ */
+            body.dark-mode-active .fc-daygrid-day-number,
+            body.dark-mode-active .fc-col-header-cell-cushion,
+            body.dark-mode-active .fc-toolbar-title,
+            body.dark-mode-active #calendar-view-title {
+                color: #f8fafc !important;
+            }
+
+            /* Xử lý các ngày của tháng trước/sau (ngày mờ) */
+            body.dark-mode-active .fc-day-other {
+                background-color: #0f172a !important;
+                background: #0f172a !important;
+                opacity: 0.4;
+            }
+
+            /* 💰 2. PHÂN HỆ TÀI CHÍNH (Finance Flow) */
+            body.dark-mode-active table thead,
+            body.dark-mode-active table thead tr,
+            body.dark-mode-active table thead th,
+            body.dark-mode-active tr[style*="background: #f8fafc"] {
+                background-color: #0f172a !important;
+                background: #0f172a !important;
+                color: #f8fafc !important;
+            }
+
+            /* 📚 3. PHÂN HỆ HỌC TẬP (Learning Hub) */
+            body.dark-mode-active #subjects-list-group div,
+            body.dark-mode-active #subjects-list-group div *,
+            body.dark-mode-active .learning-panel div[style*="background: #fff"],
+            body.dark-mode-active .learning-panel div[style*="background-color: white"] {
+                background-color: #1e293b !important;
+                background: #1e293b !important;
+                color: #f8fafc !important;
+                border-color: #334155 !important;
+            }
+
+            /* 📁 4. PHÂN HỆ CÔNG VIỆC (Tasks) */
+            body.dark-mode-active .task-form-card,
+            body.dark-mode-active .kanban-column,
+            body.dark-mode-active .task-list div,                
+            body.dark-mode-active .task-item,                    
+            body.dark-mode-active button[onclick*="backToProjectHub"],
+            body.dark-mode-active .task-list span,               
+            body.dark-mode-active .task-list i,                  
+            body.dark-mode-active span[style*="background: #fff"],
+            body.dark-mode-active span[style*="background: white"],
+            body.dark-mode-active div[style*="background: #fff"] span,
+            body.dark-mode-active div[style*="background: white"] span {
+                background-color: #334155 !important;            
+                background: #334155 !important;
+                color: #f8fafc !important;                       
+                border-color: #475569 !important;
+            }
+
+            body.dark-mode-active .task-form-card form,
+            body.dark-mode-active section[style*="background: #f8fafc"] {
+                background-color: #0f172a !important;
+                background: #0f172a !important;
+            }
+
+            /* 🖋========= 5. CHỮ VÀ INPUT ĐỔI MÀU TỔNG THỂ ========= */
+            body.dark-mode-active h1, body.dark-mode-active h2, body.dark-mode-active h3, 
+            body.dark-mode-active h4, body.dark-mode-active h5, body.dark-mode-active p, 
+            body.dark-mode-active span, body.dark-mode-active label, body.dark-mode-active strong, 
+            body.dark-mode-active th, body.dark-mode-active td, body.dark-mode-active i, 
+            body.dark-mode-active #live-time {
+                color: #f8fafc !important;
+            }
+
+            body.dark-mode-active .text-muted, 
+            body.dark-mode-active p[style*="color: #6c757d"],
+            body.dark-mode-active span[style*="color: #64748b"],
+            body.dark-mode-active .calendar-sidebar div,
+            body.dark-mode-active #live-date {
+                color: #94a3b8 !important;
+            }
+
+            body.dark-mode-active input, body.dark-mode-active select, body.dark-mode-active textarea {
+                background-color: #334155 !important;
+                color: #f8fafc !important;
+                border: 1px solid #334155 !important;
+            }
+        `;
+
+                document.head.appendChild(dynamicStyle);
+            };
+
+
+            // Lắng nghe sự kiện gạt nút Dark Mode để kích hoạt nạp thẻ style
+            const darkModeCheck = document.getElementById('settings-darkmode');
+            if (darkModeCheck) {
+                darkModeCheck.addEventListener('change', () => {
+                    injectDynamicDarkModeCSS();
                 });
             }
 
-            // Xử lý sự kiện lưu Form cài đặt
-            const settingsForm = document.getElementById('settings-form');
-            if (settingsForm) {
-                settingsForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    saveUserSettings();
-                });
-            }
+            // Chạy kích hoạt nạp luật CSS lần đầu tiên ngay khi vào trang
+            injectDynamicDarkModeCSS();
         });
 
         // Hàm lấy dữ liệu cài đặt từ API đổ vào Form
@@ -595,6 +767,18 @@
                 });
             }
         });
+        function startLiveClock() {
+            // Thay vì getElementById (chỉ lấy 1 cái), ta quét tất cả các phần tử có ID này trên toàn trang
+            setInterval(() => {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', { hour12: false });
+                const dateString = `⏳ ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' })}`;
+
+                // Bơm thời gian vào tất cả các thẻ có id là live-time và live-date xuất hiện trên UI
+                document.querySelectorAll('#live-time').forEach(el => el.innerText = timeString);
+                document.querySelectorAll('#live-date').forEach(el => el.innerText = dateString);
+            }, 1000);
+        }
     </script>
 </body>
 
