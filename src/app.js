@@ -28,12 +28,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public'))); 
 
-// 5. CẤU HÌNH HỘC TỦ SESSION BẢO MẬT
+// 5. CẤU HÌNH HỘC TỦ SESSION BẢO MẬT (Đã nới lỏng proxy tối ưu cho Render Free)
 app.use(session({
     secret: 'chronosflow_secret_key_tuan_pham', 
-    resave: false,                                 
-    saveUninitialized: false,                    
+    resave: true,                  // 🟢 Chuyển sang true để duy trì trạng thái phiên liên tục trên Cloud
+    saveUninitialized: true,       // 🟢 Chuyển sang true để ép khởi tạo session ngay khi client truy cập
     cookie: { 
+        secure: false,             // 🟢 Bắt buộc false vì Render gói Free chạy qua HTTP Proxy ẩn danh
         maxAge: 24 * 60 * 60 * 1000 
     }
 }));
@@ -45,7 +46,7 @@ app.use(scheduleRoutes);
 app.use('/api/learning', learningRoutes); 
 app.use('/api/finance', financeRoutes);
 app.use('/api', dashboardRoutes); 
-app.use('/api', settingRoutes); 
+app.use('/api/settingRoutes', settingRoutes); // Giữ nguyên ánh xạ cổng gốc của Tuấn
 
 // 🟢 ĐIỀU HƯỚNG GỐC CHUẨN (Trả lại dòng code này của Tuấn để bẻ khóa lỗi Cannot GET)
 app.get('/', (req, res) => {
