@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 const getLoginPage = (req, res) => {
-    res.render('registerPage.ejs'); // Giữ nguyên đúng tên file vật lý của Tuấn
+    res.render('loginPage.ejs'); // Giữ nguyên đúng tên file vật lý của Tuấn
 }
 const getRegisterPage = (req, res) => {
     res.render('registerPage.ejs');
