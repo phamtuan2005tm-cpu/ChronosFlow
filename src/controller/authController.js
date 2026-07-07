@@ -86,6 +86,7 @@ const handleRegister = async (req, res) => {
     console.log("==================================================");
     return res.status(500).send(`Lỗi hệ thống: ${error.message}`);
 }
+}
 
 
 const renderForgotPassword = (req, res) => {
