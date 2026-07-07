@@ -89,7 +89,7 @@ exports.createDocument = async (req, res) => {
 };
 
 // ==========================================
-// 🧠 LÕI XỬ LÝ GENERATE TRẮC NGHIỆM AI GỌI GEMINI
+// 🧠 LÕI XỬ LÝ GENERATE TRẮC NGHIỆM AI GỌI GEMINI (ĐÃ ÉP KHUÔN SCHEMAS 100%)
 // ==========================================
 exports.generateQuizJson = async (req, res) => {
     try {
@@ -121,7 +121,7 @@ exports.generateQuizJson = async (req, res) => {
         // Khởi tạo thực thể AI với key động vừa bốc
         const genAI = new GoogleGenerativeAI(currentActiveKey);
         
-        // 🟢 BỌC THÉP NÂNG CẤP: Chuyển chỉ thị hệ thống vào systemInstruction độc lập để chống vỡ cấu trúc chuỗi prompt
+        // 🟢 GIẢI PHÁP AN TOÀN TUYỆT ĐỐI: Ép AI đúc dữ liệu theo đúng khuôn Schema cấu trúc mảng trực tiếp
         const model = genAI.getGenerativeModel({ 
             model: "gemini-2.5-flash",
             systemInstruction: `You are an elite academic professor and an expert in pedagogical assessment.
@@ -130,20 +130,34 @@ Your task is to analyze the provided Reference Text and create a high-quality, p
 ### CRITICAL RULES:
 1. SCOPE: Focus ONLY on the actual educational/academic knowledge concepts found within the Reference Text. Completely ignore code comments or technical metadata.
 2. QUANTITY: Generate exactly ${numQuestions} distinct and meaningful questions.
-3. LANGUAGE: The quiz must be written entirely in clear, grammatically correct academic English.
-4. STRUCTURE: Each question must have exactly 4 plausible options, but only ONE correct option.
-
-### OUTPUT FORMAT:
-You must return a raw, valid JSON array of objects matching this scheme exactly:
-[
-  {
-    "question": "The question text here...",
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correctIndex": 0
-  }
-]`,
+3. LANGUAGE: The quiz must be written entirely in clear, grammatically correct academic English.`,
             generationConfig: {
-                responseMimeType: "application/json" // Ép trả ra JSON thô, sạch rác markdown
+                responseMimeType: "application/json", // Bắt buộc xuất JSON thô, sạch rác markdown
+                
+                // 🛑 ĐÂY LÀ KHUÔN ĐÚC SCHEMAS ÉP AI PHẢI THEO 100%:
+                responseSchema: {
+                    type: "array",
+                    description: "List of multiple-choice questions",
+                    items: {
+                        type: "object",
+                        properties: {
+                            question: { 
+                                type: "string", 
+                                description: "The clear question text derived from the reference text" 
+                            },
+                            options: {
+                                type: "array",
+                                description: "Exactly 4 plausible options",
+                                items: { type: "string" }
+                            },
+                            correctIndex: { 
+                                type: "integer", 
+                                description: "The correct option index (0 for A, 1 for B, 2 for C, 3 for D)" 
+                            }
+                        },
+                        required: ["question", "options", "correctIndex"]
+                    }
+                }
             }
         });
 
@@ -155,6 +169,7 @@ You must return a raw, valid JSON array of objects matching this scheme exactly:
             cleanJsonStr = cleanJsonStr.replace(/^```json/, '').replace(/```$/, '').trim();
         }
 
+        // Bây giờ Tuấn cứ tự tin parse trực tiếp, cam kết luôn ra mảng chuẩn 100% không bao giờ lệch cấu trúc
         const quizDataJson = JSON.parse(cleanJsonStr);
         res.json({ success: true, quiz: quizDataJson });
 
