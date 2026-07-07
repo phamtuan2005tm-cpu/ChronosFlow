@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 const getLoginPage = (req, res) => {
-    res.render('loginPage.ejs');
+    res.render('registerPage.ejs'); // Giữ nguyên đúng tên file vật lý của Tuấn
 }
 const getRegisterPage = (req, res) => {
     res.render('registerPage.ejs');
@@ -24,7 +24,8 @@ const handleLogin = async (req, res) => {
         const [rows] = await db.execute("SELECT * FROM users WHERE user_email = ?", [email]);
 
         if(rows.length === 0) {
-            return res.render('loginPage', {
+            // 🟢 Đã sửa thành registerPage.ejs chuẩn ký tự hoa để tránh lỗi Linux
+            return res.render('registerPage.ejs', {
                 title: 'Sign In - ChronosFlow',
                 error: 'Account does not exist!'
             });
@@ -34,7 +35,7 @@ const handleLogin = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.user_password);
         
         if(!isMatch) {
-            return res.render('loginPage', {
+            return res.render('registerPage.ejs', {
                 title: 'Sign In - ChronosFlow',
                 error: 'Incorrect Password!'
             })
@@ -46,7 +47,7 @@ const handleLogin = async (req, res) => {
         return res.redirect('/homePage');
     } catch (err) {
         console.error('❌ Lỗi handleLogin:', err);
-        return res.status(500).send('Lỗi hệ thống máy chủ.');
+        return res.status(500).send(`Lỗi hệ thống máy chủ: ${err.message}`);
     }
 }
 
@@ -54,7 +55,8 @@ const handleRegister = async (req, res) => {
     const {email, password, confirmPassword} = req.body;
 
     if (password !== confirmPassword) {
-        return res.render('registerPage', { 
+        // 🟢 Đã sửa đồng bộ sang chữ P viết hoa cho khớp tên file views
+        return res.render('registerPage.ejs', { 
             title: 'Sign Up - ChronosFlow', 
             error: 'Passwords do not match!' 
         });
@@ -63,7 +65,7 @@ const handleRegister = async (req, res) => {
         const [existingUser] = await db.execute('SELECT * FROM users WHERE user_email = ?', [email]);
         
         if (existingUser.length > 0) {
-            return res.render('registerPage', { 
+            return res.render('registerPage.ejs', { 
                 title: 'Sign Up - ChronosFlow', 
                 error: 'Email is already registered!' 
             });
@@ -79,8 +81,9 @@ const handleRegister = async (req, res) => {
 
         return res.redirect('/login');
     } catch (err) {
-        console.error('❌ Lỗi handleRegister:', err);
-        return res.status(500).send('Lỗi hệ thống máy chủ.');
+        console.error('❌ Lỗi handleRegister chí mạng:', err);
+        // Ép văng lỗi chi tiết ra màn hình nếu database mây bị trục trặc cấu hình bảng
+        return res.status(500).send(`Lỗi hệ thống máy chủ khi ghi nhận data: ${err.message}`);
     }
 }
 
@@ -88,7 +91,6 @@ const renderForgotPassword = (req, res) => {
     res.render('forgot-password');
 };
 
-// [POST] Tiếp nhận email, kiểm tra, sinh mã và bắn email cứu hộ
 const handleForgotPassword = async (req, res) => {
     const { email } = req.body;
 
@@ -107,15 +109,17 @@ const handleForgotPassword = async (req, res) => {
             [token, expires, email]
         );
 
-        const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+        // 🟢 Bọc thép link động: Tự động nhận diện domain Render khi chạy production hoặc localhost khi chạy dưới máy
+        const baseUrl = req.get('host').includes('localhost') ? `http://localhost:${process.env.PORT || 3000}` : `https://${req.get('host')}`;
+        const resetLink = `${baseUrl}/reset-password?token=${token}`;
 
         const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_APP_PASSWORD // 🔥 Đã đổi cho khớp với file .env
-    }
-});
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_APP_PASSWORD 
+            }
+        });
 
         const mailOptions = {
             from: `"ChronosFlow Team" <${process.env.EMAIL_USER}>`,
@@ -143,7 +147,6 @@ const handleForgotPassword = async (req, res) => {
     }
 }
 
-// 🔑 [GET] Đón link từ mail quay về - kiểm tra token còn hạn không để hiện trang gõ pass mới
 const renderResetPassword = async (req, res) => {
     const { token } = req.query;
 
@@ -164,7 +167,6 @@ const renderResetPassword = async (req, res) => {
     }
 };
 
-// 🔒 [POST] Nhận mật khẩu mới, băm bảo mật bằng bcrypt và cập nhật vào DB
 const handleResetPassword = async (req, res) => {
     const { token, password, confirmPassword } = req.body;
 
@@ -184,9 +186,8 @@ const handleResetPassword = async (req, res) => {
 
         const userEmail = users[0].user_email;
         const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds); // Đồng bộ băm mật khẩu giống handleRegister
+        const hashedPassword = await bcrypt.hash(password, saltRounds); 
 
-        // Cập nhật pass mới và xóa sạch Token cũ tránh dùng lại link
         await db.execute(
             'UPDATE users SET user_password = ?, reset_token = NULL, reset_token_expires = NULL WHERE user_email = ?',
             [hashedPassword, userEmail]
@@ -207,6 +208,6 @@ module.exports = {
     handleLogin,
     renderForgotPassword,
     handleForgotPassword,
-    renderResetPassword, // Export hàm mới phục vụ Reset
-    handleResetPassword  // Export hàm mới phục vụ Reset
+    renderResetPassword, 
+    handleResetPassword  
 };
