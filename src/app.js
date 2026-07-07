@@ -15,10 +15,7 @@ const scheduleRoutes = require('./routes/scheduleRoutes');
 const learningRoutes = require('./routes/learningRoutes'); 
 const financeRoutes = require('./routes/financeRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes'); 
-const settingRoutes = require('./routes/settingRoute'); 
-
-// IMPORT CRON JOB QUÉT LỊCH TRÌNH
-const { initNotificationJobs } = require('./jobs/notificationJob');
+const settingRoutes = require('./routes/settingRoute'); // 🟢 Đã đồng bộ số ít
 
 // 3. CẤU HÌNH VIEW ENGINE
 app.set('view engine', 'ejs');
@@ -27,7 +24,7 @@ app.set('views', path.join(__dirname, 'views'));
 // 4. CẤU HÌNH MIDDLEWARE & THƯ MỤC TĨNH
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); // 🟢 Đã sửa đường dẫn chuẩn gốc
+app.use(express.static(path.join(__dirname, '../public'))); 
 
 // 5. CẤU HÌNH HỘC TỦ SESSION BẢO MẬT
 app.use(session({
@@ -40,27 +37,24 @@ app.use(session({
 }));
 
 // 6. ĐẤU NỐI ĐỒNG BỘ CÁC CỔNG ROUTE
+
 app.use('/', authRoutes); 
 app.use('/api', taskRoutes);
 app.use(scheduleRoutes); 
 app.use('/api/learning', learningRoutes); 
 app.use('/api/finance', financeRoutes);
 app.use('/api', dashboardRoutes); 
-app.use('/api', settingRoutes); 
+app.use('/api', settingRoutes); // 🟢 Đấu nối cổng local duy nhất sạch rác
 
-// ĐỊNH TUYẾN GỐC MẶC ĐỊNH
+// 💡 Nếu chạy lệnh trên vẫn báo lỗi, Tuấn đổi dấu gạch chéo cụ thể thành:
+const { initNotificationJobs } = require('./jobs/notificationJob');
+initNotificationJobs();
+// 7. KÍCH HOẠT SERVER
 app.get('/', (req, res) => {
     res.redirect('/login');
 });
-
-// 7. KÍCH HOẠT SERVER HOÀN CHỈNH
 app.listen(PORT, () => {
-    console.log(`\n==================================================`);
-    console.log(`🚀 ChronosFlow Server chạy chuẩn MVC tại cổng: ${PORT}`);
+    console.log(`🚀 ChronosFlow Server chạy chuẩn MVC tại: http://localhost:${PORT}`);
     console.log(`📡 DATABASE HOST HIỆN TẠI ĐANG CHẠY: [${process.env.DB_HOST}]`);
-    console.log(`==================================================\n`);
-
-    // Kích hoạt Cron job sau khi server khởi động thành công
-    initNotificationJobs();
-    console.log(`⏰ [Cron Job] Hệ thống quét thông báo lịch trình đã được kích hoạt ngầm!`);
 });
+
