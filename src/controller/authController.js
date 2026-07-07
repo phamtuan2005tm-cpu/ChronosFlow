@@ -80,12 +80,13 @@ const handleRegister = async (req, res) => {
         );
 
         return res.redirect('/login');
-    } catch (err) {
-        console.error('❌ Lỗi handleRegister chí mạng:', err);
-        // Ép văng lỗi chi tiết ra màn hình nếu database mây bị trục trặc cấu hình bảng
-        return res.status(500).send(`Lỗi hệ thống máy chủ khi ghi nhận data: ${err.message}`);
-    }
+    }  catch (error) {
+    console.log("==================================================");
+    console.log("🚨 BIẾN CỐ CHÍ MẠNG KHI ĐĂNG KÝ TRÊN PRODUCTION:", error.message);
+    console.log("==================================================");
+    return res.status(500).send(`Lỗi hệ thống: ${error.message}`);
 }
+
 
 const renderForgotPassword = (req, res) => {
     res.render('forgot-password');
